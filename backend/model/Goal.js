@@ -27,6 +27,10 @@ const GoalSchema = new mongoose.Schema(
     frequency: {
       type: String,
     },
+    duration: {
+      type: Number,
+      required: true
+    }
   },
   { timestamps: true }
 );
