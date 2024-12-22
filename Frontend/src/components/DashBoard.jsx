@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 
 const DashBoard = ({ username }) => {
   const navigate = useNavigate();
-
+  const logouthandler = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
   const handleCreateGoal = () => {
     navigate("/createGoal"); // Redirect to /createGoal page
   };
@@ -16,6 +19,9 @@ const DashBoard = ({ username }) => {
         <div className="text-lg">
           <span>Welcome, </span>
           <span className="font-semibold">{username}</span>
+        </div>
+        <div>
+          <button onClick={logouthandler}>Logout</button>
         </div>
       </nav>
 
