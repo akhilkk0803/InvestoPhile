@@ -8,6 +8,7 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import GoalForm from "./components/GoalForm";
 import "./index.css";
+import DashBoard from "./components/DashBoard";
 
 function App() {
   const router = createBrowserRouter([
@@ -25,6 +26,10 @@ function App() {
         {
           path: "createGoal",
           element: <GoalForm />,
+        },
+        {
+          path: "dashboard",
+          element: <DashBoard />,
         },
       ],
     },
