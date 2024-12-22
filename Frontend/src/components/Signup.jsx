@@ -20,7 +20,7 @@ const Signup = () => {
     e.preventDefault();
     console.log("Signup data:", formData);
     const res = await axios.post(url + "user/signup", formData);
-    console.log(res.data);
+    localStorage.setItem("token", res.data.token);
   };
 
   return (

@@ -18,6 +18,7 @@ const Login = () => {
     e.preventDefault();
     console.log("Login data:", formData);
     const res = await axios.post(url + "user/login", formData);
+    localStorage.setItem("token", res.data.token);
     // Call your backend API here
   };
 
