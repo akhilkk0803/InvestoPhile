@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { url } from "../url";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const Signup = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     age: "",
@@ -21,6 +23,7 @@ const Signup = () => {
     console.log("Signup data:", formData);
     const res = await axios.post(url + "user/signup", formData);
     localStorage.setItem("token", res.data.token);
+    navigate("/dashboard");
   };
 
   return (

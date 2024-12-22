@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate, NavLink } from "react-router-dom";
 
 function Home() {
   return (
@@ -22,12 +23,16 @@ function Home() {
             </a>
           </div>
           <div className="space-x-4">
-            <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-              Sign Up
-            </button>
-            <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300">
-              Login
-            </button>
+            <NavLink to="/signup">
+              <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                Sign Up
+              </button>
+            </NavLink>
+            <NavLink to="/login">
+              <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300">
+                Login
+              </button>
+            </NavLink>
           </div>
         </div>
       </nav>

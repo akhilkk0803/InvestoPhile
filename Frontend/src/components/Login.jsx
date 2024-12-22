@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { url } from "../url";
+import { useNavigate } from "react-router-dom";
 const Login = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -19,7 +21,7 @@ const Login = () => {
     console.log("Login data:", formData);
     const res = await axios.post(url + "user/login", formData);
     localStorage.setItem("token", res.data.token);
-    // Call your backend API here
+    navigate("/dashboard");
   };
 
   return (
