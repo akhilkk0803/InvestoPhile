@@ -17,62 +17,61 @@ const Login = () => {
     e.preventDefault();
     console.log("Login data:", formData);
 
-    try {
-      const response = await fetch("http://localhost:5000/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-      alert(data.message || "Login successful!");
-    } catch (error) {
-      alert("Error during login. Please try again.");
-    }
+    // Call your backend API here
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 w-full max-w-sm"
-      >
-        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Email
-          </label>
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Password
-          </label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
-        >
-          Login
-        </button>
-      </form>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-400 to-blue-500">
+      <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
+          Welcome Back!
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-green-500 text-white p-3 rounded-lg font-semibold hover:bg-green-600 transition duration-300"
+          >
+            Log In
+          </button>
+        </form>
+        <p className="text-center text-sm text-gray-500 mt-4">
+          Don't have an account?{" "}
+          <a
+            href="/signup"
+            className="text-green-600 font-semibold hover:underline"
+          >
+            Sign Up
+          </a>
+        </p>
+      </div>
     </div>
   );
 };
