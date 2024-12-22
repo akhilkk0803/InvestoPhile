@@ -1,21 +1,30 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import "./index.css";
 
 function App() {
-  return (
-    <Router>
-      <nav>
-        <Link to="/signup">Signup</Link> | <Link to="/login">Login</Link>
-      </nav>
-      <Routes>
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    </Router>
-  );
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      children: [
+        {
+          path: "signup",
+          element: <Signup />,
+        },
+        {
+          path: "login",
+          element: <Login />,
+        },
+      ],
+    },
+  ]);
+  return <RouterProvider router={router}></RouterProvider>;
 }
 
 export default App;

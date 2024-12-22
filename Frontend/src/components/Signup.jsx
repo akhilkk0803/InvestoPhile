@@ -101,6 +101,7 @@ const Signup = () => {
             Log In
           </a>
         </p>
+        <div className="text-red-600">HIEEEE</div>
       </div>
     </div>
   );

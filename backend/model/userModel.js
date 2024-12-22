@@ -9,12 +9,13 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     passwordHash: {
       type: String,
       required: true,
     },
-    age: Number,
+    age: { type: Number, required: true },
     goals: [
       {
         type: mongoose.Types.ObjectId,
