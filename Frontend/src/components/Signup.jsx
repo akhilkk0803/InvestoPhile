@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { url } from "../url";
 const Signup = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -18,7 +18,15 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Signup data:", formData);
-
+    const res = await fetch(url + "/user/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+    const token = await res.json();
+    console.log(token);
     // Call your backend API here
   };
 
