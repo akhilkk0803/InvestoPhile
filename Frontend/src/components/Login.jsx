@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-
+import axios from "axios";
+import { url } from "../url";
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -16,7 +17,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Login data:", formData);
-
+    const res = await axios.post(url + "user/login", formData);
     // Call your backend API here
   };
 

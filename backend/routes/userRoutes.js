@@ -14,6 +14,7 @@ const createToken = (id) => {
 };
 router.post("/signup", async (req, res, next) => {
   const { name, email, password, age } = req.body;
+  console.log(name);
   try {
     const user = await User.findOne({ email });
     if (user) {
@@ -26,6 +27,7 @@ router.post("/signup", async (req, res, next) => {
       passwordHash,
       age,
     });
+
     const token = createToken(newUser._id);
     res.status(200).json({ token });
   } catch (error) {
