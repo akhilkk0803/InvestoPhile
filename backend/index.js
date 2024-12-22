@@ -5,7 +5,9 @@ const app = express();
 const User = require("./model/userModel");
 const Goal = require("./model/Goal");
 const userRoutes = require("./routes/userRoutes");
+const cors = require("cors");
 app.use(express.json());
+app.use(cors());
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
