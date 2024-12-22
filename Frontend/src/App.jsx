@@ -8,12 +8,14 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import GoalForm from "./components/GoalForm";
 import "./index.css";
+import Home from "./components/Home";
 import DashBoard from "./components/DashBoard";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
+      element: <Home />,
       children: [
         {
           path: "signup",
