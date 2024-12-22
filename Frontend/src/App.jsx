@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
+import GoalForm from "./components/GoalForm";
 import "./index.css";
 
 function App() {
@@ -20,6 +21,10 @@ function App() {
         {
           path: "login",
           element: <Login />,
+        },
+        {
+          path: "createGoal",
+          element: <GoalForm />,
         },
       ],
     },
