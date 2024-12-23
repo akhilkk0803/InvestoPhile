@@ -26,13 +26,20 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (confirmPassword !== formData.password) {
-      alert("ConfirmPassword and Password are not same");
-      return;
+
+    try {
+      if (confirmPassword !== formData.password) {
+        alert("ConfirmPassword and Password are not same");
+        return;
+      }
+      console.log("Signup data:", formData);
+      const res = await axios.post(url + "user/signup", formData);
+      setLoading(false);
+      navigate("/login");
+    } catch (error) {
+      alert(error.response.data.message);
+      setLoading(false);
     }
-    console.log("Signup data:", formData);
-    const res = await axios.post(url + "user/signup", formData);
-    navigate("/login");
   };
 
   return (

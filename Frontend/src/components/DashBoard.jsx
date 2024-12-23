@@ -40,9 +40,13 @@ const DashBoard = ({ username }) => {
       </nav>
       {/* Goals */}
       {goal.length == 0 && <div>No goals created yet</div>}
-      {goal.map((el) => (
-        <Chart goalName={el.goalName} />
-      ))}
+      <div className="flex flex-wrap">
+        {goal.map((el) => (
+          <div className="border-2 p-4 ">
+            <Chart goalName={el.goalName} id={el._id} />
+          </div>
+        ))}
+      </div>
       {/* Main Dashboard Content */}
       <div className="flex flex-col justify-center items-center h-[80vh]">
         <button

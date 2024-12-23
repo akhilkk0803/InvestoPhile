@@ -20,11 +20,17 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Login data:", formData);
-    setLoading(true);
-    const res = await axios.post(url + "user/login", formData);
-    setLoading(false);
-    localStorage.setItem("token", res.data.token);
-    navigate("/dashboard");
+    try {
+      setLoading(true);
+      const res = await axios.post(url + "user/login", formData);
+      setLoading(false);
+      localStorage.setItem("token", res.data.token);
+      navigate("/dashboard");
+    } catch (error) {
+      alert(error.response.data.message);
+      setLoading(false);
+      return;
+    }
   };
 
   return (

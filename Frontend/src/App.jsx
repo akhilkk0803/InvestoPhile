@@ -10,6 +10,7 @@ import GoalForm from "./components/GoalForm";
 import "./index.css";
 import Home from "./components/Home";
 import DashBoard from "./components/DashBoard";
+import SingleGoal from "./components/SingleGoal";
 
 function App() {
   const router = createBrowserRouter([
@@ -31,6 +32,10 @@ function App() {
         {
           path: "createGoal",
           element: <GoalForm />,
+        },
+        {
+          path: "goal/:goalid",
+          element: <SingleGoal />,
         },
         {
           path: "dashboard",

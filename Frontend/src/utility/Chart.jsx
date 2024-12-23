@@ -2,7 +2,7 @@ import * as React from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { useDrawingArea } from "@mui/x-charts/hooks";
 import { styled } from "@mui/material/styles";
-
+import { NavLink } from "react-router-dom";
 const data = [
   { value: 5, label: "STOCK" },
   { value: 10, label: "MUTUALFUNDS" },
@@ -31,10 +31,12 @@ function PieCenterLabel({ children }) {
   );
 }
 
-export default function PieChartWithCenterLabel({ goalName }) {
+export default function PieChartWithCenterLabel({ goalName, id }) {
   return (
-    <PieChart series={[{ data, innerRadius: 80 }]} {...size}>
-      <PieCenterLabel>{goalName}</PieCenterLabel>
-    </PieChart>
+    <NavLink to={"/goal/" + id}>
+      <PieChart series={[{ data, innerRadius: 80 }]} {...size}>
+        <PieCenterLabel>{goalName}</PieCenterLabel>
+      </PieChart>
+    </NavLink>
   );
 }
