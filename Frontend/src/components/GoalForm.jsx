@@ -7,7 +7,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { url } from "../url";
+import { useNavigate } from "react-router-dom";
 const GoalForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     goalName: "",
     investmentType: "",
@@ -24,11 +26,12 @@ const GoalForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(`Form Submitted: ${JSON.stringify(formData)}`);
     const res = await axios.post(url + "user/createGoal", {
       userToken: localStorage.getItem("token"),
       goalDetails: formData,
     });
+    alert("Goal created");
+    navigate("/dashboard");
   };
 
   return (
