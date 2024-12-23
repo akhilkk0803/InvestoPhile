@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { url } from "../url";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 const Login = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -19,7 +20,9 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Login data:", formData);
+    setLoading(true);
     const res = await axios.post(url + "user/login", formData);
+    setLoading(false);
     localStorage.setItem("token", res.data.token);
     navigate("/dashboard");
   };
@@ -63,17 +66,17 @@ const Login = () => {
             type="submit"
             className="w-full bg-green-500 text-white p-3 rounded-lg font-semibold hover:bg-green-600 transition duration-300"
           >
-            Log In
+            {loading ? "Loading..." : "Log In"}
           </button>
         </form>
         <p className="text-center text-sm text-gray-500 mt-4">
           Don't have an account?{" "}
-          <a
-            href="/signup"
+          <NavLink
+            to="/signup"
             className="text-green-600 font-semibold hover:underline"
           >
             Sign Up
-          </a>
+          </NavLink>
         </p>
       </div>
     </div>

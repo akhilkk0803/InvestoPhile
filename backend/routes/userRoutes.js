@@ -22,7 +22,7 @@ const getUserFromToken = (token) => {
   } catch (error) {
     throw new Error("Invalid Token");
   }
-}
+};
 
 router.post("/signup", async (req, res, next) => {
   const { name, email, password, age } = req.body;
@@ -65,9 +65,9 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-router.get("/getGoals", async (req, res, next) => {
+router.post("/getGoals", async (req, res, next) => {
   const { userToken } = req.body;
-  //console.log(userToken);
+  console.log(userToken);
   const userId = getUserFromToken(userToken).id;
   console.log(userId);
   if (!userToken) {
@@ -86,7 +86,6 @@ router.get("/getGoals", async (req, res, next) => {
   }
 });
 
-
 router.post("/createGoal", async (req, res, next) => {
   const { userToken, goalDetails } = req.body;
   const {
@@ -96,16 +95,25 @@ router.post("/createGoal", async (req, res, next) => {
     targetAmount,
     riskTolerance,
     frequency,
-    duration
+    duration,
   } = goalDetails;
-
+  // console.log(goalDetails);
   const userId = getUserFromToken(userToken).id;
   //console.log(userId);
   //console.log(goal);
   if (!userToken) {
     return res.status(401).json({ error: "Authorization token missing" });
   }
-
+  console.log(
+    userId,
+    goalName,
+    investmentType,
+    investmentAmount,
+    targetAmount,
+    riskTolerance,
+    frequency,
+    duration
+  );
   try {
     const newGoal = await Goal.create({
       userId,
@@ -115,13 +123,13 @@ router.post("/createGoal", async (req, res, next) => {
       targetAmount,
       riskTolerance,
       frequency,
-      duration
+      duration,
     });
-
+    console.log(newGoal);
     if (!newGoal) {
       throw generateError("Goal Insertion Failed!", 500);
     }
-    res.status(200).send("New Goal Created Successfully");
+    res.status(200).json({ message: "New Goal Created Successfully" });
   } catch (error) {
     next(error);
   }

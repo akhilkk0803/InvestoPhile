@@ -5,23 +5,30 @@
 //risk tolerance  drop down -- very low, low, moderate,high, very high
 
 import React, { useState } from "react";
-
+import axios from "axios";
+import { url } from "../url";
 const GoalForm = () => {
   const [formData, setFormData] = useState({
     goalName: "",
     investmentType: "",
     investmentAmount: "",
     riskTolerance: "",
+    duration: "",
+    frequency: "Monthly",
+    targetAmount: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     alert(`Form Submitted: ${JSON.stringify(formData)}`);
-    // You can send this data to your backend using Axios or Fetch.
+    const res = await axios.post(url + "user/createGoal", {
+      userToken: localStorage.getItem("token"),
+      goalDetails: formData,
+    });
   };
 
   return (
@@ -69,8 +76,8 @@ const GoalForm = () => {
             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">Select an option</option>
-            <option value="sip">SIP</option>
-            <option value="lump sum">Lump Sum</option>
+            <option value="Sip">SIP</option>
+            <option value="Lumpsum">Lump Sum</option>
           </select>
         </div>
 
@@ -87,6 +94,40 @@ const GoalForm = () => {
             id="investmentAmount"
             name="investmentAmount"
             value={formData.investmentAmount}
+            onChange={handleChange}
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter amount"
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="investmentAmount"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Target Amount
+          </label>
+          <input
+            type="number"
+            id="targetAmount"
+            name="targetAmount"
+            value={formData.targetAmount}
+            onChange={handleChange}
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter amount"
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="duration"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Duration in months
+          </label>
+          <input
+            type="number"
+            id="duration"
+            name="duration"
+            value={formData.duration}
             onChange={handleChange}
             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
             placeholder="Enter amount"
@@ -109,11 +150,11 @@ const GoalForm = () => {
             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">Select risk tolerance</option>
-            <option value="very low">Very Low</option>
-            <option value="low">Low</option>
-            <option value="moderate">Moderate</option>
-            <option value="high">High</option>
-            <option value="very high">Very High</option>
+            <option value="Very Low">Very Low</option>
+            <option value="Low">Low</option>
+            <option value="Moderate">Moderate</option>
+            <option value="High">High</option>
+            <option value="Very High">Very High</option>
           </select>
         </div>
 

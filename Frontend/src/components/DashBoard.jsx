@@ -1,16 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
+import { url } from "../url";
+import Chart from "../utility/Chart";
 const DashBoard = ({ username }) => {
+  const [goal, setGoals] = useState([]);
   const navigate = useNavigate();
   const logouthandler = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
+
   const handleCreateGoal = () => {
     navigate("/createGoal"); // Redirect to /createGoal page
   };
 
+  useEffect(() => {
+    if (!localStorage.getItem("token")) navigate("/");
+    axios
+      .post(url + "user/getGoals", {
+        userToken: localStorage.getItem("token"),
+      })
+      .then((goals) => {
+        setGoals(goals.data);
+      });
+  }, []);
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Navigation Bar */}
@@ -24,7 +38,11 @@ const DashBoard = ({ username }) => {
           <button onClick={logouthandler}>Logout</button>
         </div>
       </nav>
-
+      {/* Goals */}
+      {goal.length == 0 && <div>No goals created yet</div>}
+      {goal.map((el) => (
+        <Chart goalName={el.goalName} />
+      ))}
       {/* Main Dashboard Content */}
       <div className="flex flex-col justify-center items-center h-[80vh]">
         <button

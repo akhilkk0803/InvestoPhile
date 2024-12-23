@@ -14,9 +14,9 @@ const GoalSchema = new mongoose.Schema(
       enum: ["Sip", "Lumpsum"],
       required: true,
     },
-    investmentAmount: Number,
+    investmentAmount: String,
     targetAmount: {
-      type: Number,
+      type: String,
       required: true,
     },
     riskTolerance: {
@@ -26,11 +26,12 @@ const GoalSchema = new mongoose.Schema(
     },
     frequency: {
       type: String,
+      default: "monthly",
     },
     duration: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   { timestamps: true }
 );

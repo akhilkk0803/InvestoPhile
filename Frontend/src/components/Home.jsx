@@ -51,9 +51,11 @@ function Home() {
                 stocks, mutual funds, real estate, and more. Start today and
                 secure your financial future!
               </p>
-              <button className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700">
-                Get Started
-              </button>
+              <NavLink to="/signup">
+                <button className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700">
+                  Get Started
+                </button>
+              </NavLink>
             </div>
 
             {/* Right Content */}
