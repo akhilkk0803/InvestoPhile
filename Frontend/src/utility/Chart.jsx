@@ -31,11 +31,11 @@ function PieCenterLabel({ children }) {
   );
 }
 
-export default function PieChartWithCenterLabel({ goalName, id }) {
+export default function PieChartWithCenterLabel({ goal }) {
   return (
-    <NavLink to={"/goal/" + id}>
+    <NavLink to={"/goal/" + goal._id} state={{ goal }}>
       <PieChart series={[{ data, innerRadius: 80 }]} {...size}>
-        <PieCenterLabel>{goalName}</PieCenterLabel>
+        <PieCenterLabel>{goal.goalName}</PieCenterLabel>
       </PieChart>
     </NavLink>
   );
