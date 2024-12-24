@@ -46,7 +46,6 @@ router.post("/signup", async (req, res, next) => {
     next(error);
   }
 });
-
 router.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
   try {
@@ -130,6 +129,31 @@ router.post("/createGoal", async (req, res, next) => {
       throw generateError("Goal Insertion Failed!", 500);
     }
     res.status(200).json({ message: "New Goal Created Successfully" });
+  } catch (error) {
+    next(error);
+  }
+});
+router.put("/updateGoal/", async (req, res, next) => {
+  try {
+    const { userToken, goalDetails } = req.body;
+    const userId = getUserFromToken(userToken).id;
+    const { progress } = goalDetails;
+    console.log(userId);
+    console.log(goalDetails);
+    if (!userToken) {
+      return res.status(401).json({ error: "Authorization token missing" });
+    }
+    const goal = await Goal.findById(goalDetails._id);
+    if (!goal) {
+      throw generateError("Goal Not Found!", 404);
+    }
+    const updatedGoal = await Goal.findByIdAndUpdate(
+      goalDetails._id,
+      { progress },
+      { new: true }
+    );
+    console.log(updatedGoal);
+    res.status(200).json({ message: "Successfull" });
   } catch (error) {
     next(error);
   }

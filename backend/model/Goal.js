@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const GoalSchema = new mongoose.Schema(
   {
     userId: {
@@ -32,7 +33,20 @@ const GoalSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    progress: [
+      {
+        month: {
+          type: String,
+          required: true,
+        },
+        investment: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
+
 module.exports = mongoose.model("Goal", GoalSchema);

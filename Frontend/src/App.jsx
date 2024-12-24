@@ -11,11 +11,12 @@ import "./index.css";
 import Home from "./components/Home";
 import DashBoard from "./components/DashBoard";
 import SingleGoal from "./components/SingleGoal";
-
+import Root from "./components/Root";
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
+      element: <Root />,
       children: [
         {
           index: true,

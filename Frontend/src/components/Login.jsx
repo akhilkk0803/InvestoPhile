@@ -19,7 +19,6 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login data:", formData);
     try {
       setLoading(true);
       const res = await axios.post(url + "user/login", formData);
