@@ -10,9 +10,10 @@ const SingleGoal = () => {
   const { goalid } = useParams();
   const [goal, setGoal] = useState({});
   const [showProgressForm, setShowProgressForm] = useState(false);
-  const [newProgress, setNewProgress] = useState({ month: "", investment: "" });
+  const [newProgress, setNewProgress] = useState({
+    investment: "",
+  });
 
-  // Dummy asset allocation data
   const assetAllocation = [
     { value: 30, label: "Stock" },
     { value: 25, label: "Mutual Funds" },
@@ -28,20 +29,24 @@ const SingleGoal = () => {
 
   // Handle updating the progress
   const handleUpdateProgress = async () => {
-    if (newProgress.month && newProgress.investment) {
+    if (newProgress.investment) {
+      const updatedProgress = {
+        investment: newProgress.investment,
+        progressNumber: +goal.progress.at(-1).progressNumber + 1,
+      };
       setGoal((prevGoal) => ({
         ...prevGoal,
-        progress: [...prevGoal.progress, newProgress],
+        progress: [...prevGoal.progress, updatedProgress],
       }));
       const res = await axios.put(url + "user/updateGoal", {
         userToken: localStorage.getItem("token"),
         goalDetails: {
           ...goal,
-          progress: [...goal.progress, newProgress],
+          progress: [...goal.progress, updatedProgress],
         },
       });
       setShowProgressForm(false);
-      setNewProgress({ month: "", investment: "" });
+      setNewProgress({ investment: "" });
     } else {
       alert("Please fill in both fields.");
     }
@@ -110,7 +115,6 @@ const SingleGoal = () => {
             series={[{ data: assetAllocation, innerRadius: 80 }]}
             width={750}
             height={450}
-           
           />
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-lg">
@@ -127,8 +131,8 @@ const SingleGoal = () => {
           <LineChart
             xAxis={[
               {
-                scaleType: "point",
-                data: goal?.progress?.map((data) => data.month),
+                data: goal?.progress?.map((data) => data.progressNumber),
+                scaleType: "linear", // or "band", "log", etc.
               },
             ]}
             series={[
@@ -154,21 +158,7 @@ const SingleGoal = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <label className="block text-xl font-semibold text-gray-700 mb-2">
-                  Month
-                </label>
-                <input
-                  type="text"
-                  value={newProgress.month}
-                  onChange={(e) =>
-                    setNewProgress({ ...newProgress, month: e.target.value })
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                  placeholder="Enter month"
-                />
-              </div>
-              <div>
-                <label className="block text-xl font-semibold text-gray-700 mb-2">
-                  Investment
+                  Current Amount
                 </label>
                 <input
                   type="number"
@@ -180,7 +170,7 @@ const SingleGoal = () => {
                     })
                   }
                   className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                  placeholder="Enter investment amount"
+                  placeholder="Enter current amount"
                 />
               </div>
             </div>

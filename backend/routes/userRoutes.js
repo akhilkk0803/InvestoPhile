@@ -113,6 +113,7 @@ router.post("/createGoal", async (req, res, next) => {
     frequency,
     duration
   );
+  const progress = [{ progressNumber: 0, investment: investmentAmount }];
   try {
     const newGoal = await Goal.create({
       userId,
@@ -123,6 +124,7 @@ router.post("/createGoal", async (req, res, next) => {
       riskTolerance,
       frequency,
       duration,
+      progress,
     });
     console.log(newGoal);
     if (!newGoal) {

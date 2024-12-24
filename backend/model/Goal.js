@@ -35,7 +35,7 @@ const GoalSchema = new mongoose.Schema(
     },
     progress: [
       {
-        month: {
+        progressNumber: {
           type: String,
           required: true,
         },
