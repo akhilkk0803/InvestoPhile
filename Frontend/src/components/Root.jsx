@@ -1,10 +1,15 @@
 import React from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import NavBar from "./NavBar";
-import { Outlet } from "react-router-dom";
+
 const Root = () => {
+  const location = useLocation();
+  const hideNavBarRoutes = ["/login", "/signup", "/"];
+  const shouldHideNavBar = hideNavBarRoutes.includes(location.pathname);
+
   return (
     <div>
-      <NavBar />
+      {!shouldHideNavBar && <NavBar />}
       <Outlet />
     </div>
   );
