@@ -126,13 +126,19 @@ const SingleGoal = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-lg p-8 mb-6">
+      <div className="bg-white rounded-lg shadow-lg p-8 mb-6 flex justify-center items-center flex-col">
         {goal?.progress?.length > 0 ? (
           <LineChart
             xAxis={[
               {
                 data: goal?.progress?.map((data) => data.progressNumber),
                 scaleType: "linear", // or "band", "log", etc.
+                label: "Progress Number",
+              },
+            ]}
+            yAxis={[
+              {
+                label: "Current Amount",
               },
             ]}
             series={[
