@@ -302,15 +302,4 @@ model.fit(X_train_scaled, y_train, epochs=100, batch_size=1)
 
 # 5. Testing the model with new user input
 # For SIP
-new_user_data_sip = np.array([[0.5, 10000, 1, 10, 1500000, equities_avg_return, bonds_avg_return, gold_avg_return, fd_avg_return, mf_debt_avg_return]])
-new_user_data_sip_scaled = scaler.transform(new_user_data_sip)
-portfolio_allocation_sip = model.predict(new_user_data_sip_scaled)
-print(f"Recommended Portfolio Allocation for SIP: {portfolio_allocation_sip[0]}")
-
-# For Lumpsum
-new_user_data_lumpsum = np.array([[0, 200000, 0, 10, 1500000, equities_avg_return, bonds_avg_return, gold_avg_return, fd_avg_return, mf_debt_avg_return]])
-new_user_data_lumpsum_scaled = scaler.transform(new_user_data_lumpsum)
-portfolio_allocation_lumpsum = model.predict(new_user_data_lumpsum_scaled)
-print(f"Recommended Portfolio Allocation for Lumpsum: {portfolio_allocation_lumpsum[0]}")
-
-
+model.save('portfolio_model.h5')

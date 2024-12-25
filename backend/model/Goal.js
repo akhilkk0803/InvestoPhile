@@ -45,6 +45,7 @@ const GoalSchema = new mongoose.Schema(
         },
       },
     ],
+    allocation: [],
   },
   { timestamps: true }
 );

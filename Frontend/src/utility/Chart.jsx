@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { useDrawingArea } from "@mui/x-charts/hooks";
 import { styled } from "@mui/material/styles";
@@ -8,6 +9,7 @@ const data = [
   { value: 10, label: "MUTUALFUNDS" },
   { value: 15, label: "GOLD" },
   { value: 20, label: "BONDS" },
+  { value: 50, label: "FIXED DEPOSIT" },
 ];
 
 const size = {
@@ -32,9 +34,14 @@ function PieCenterLabel({ children }) {
 }
 
 export default function PieChartWithCenterLabel({ goal }) {
+  const [allocation, setallocation] = useState([]);
+  useEffect(() => {
+    setallocation(goal.allocation);
+  }, [goal]);
+  console.log(allocation);
   return (
     <NavLink to={"/goal/" + goal._id} state={{ goal }}>
-      <PieChart series={[{ data, innerRadius: 80 }]} {...size}>
+      <PieChart series={[{ data: allocation, innerRadius: 80 }]} {...size}>
         <PieCenterLabel>{goal.goalName}</PieCenterLabel>
       </PieChart>
     </NavLink>

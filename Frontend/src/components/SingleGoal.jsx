@@ -3,7 +3,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { PieChart } from "@mui/x-charts/PieChart";
 import axios from "axios";
 import { url } from "../url";
-import { LineChart } from "@mui/x-charts/LineChart";
+import { LineChart, lineElementClasses } from "@mui/x-charts/LineChart";
 
 const SingleGoal = () => {
   const location = useLocation();
@@ -14,15 +14,9 @@ const SingleGoal = () => {
     investment: "",
   });
 
-  const assetAllocation = [
-    { value: 30, label: "Stock" },
-    { value: 25, label: "Mutual Funds" },
-    { value: 20, label: "Gold" },
-    { value: 25, label: "Bonds" },
-  ];
-
   useEffect(() => {
     if (location?.state?.goal) {
+      console.log(location.state.goal);
       setGoal(location.state.goal);
     }
   }, [location, goalid]);
@@ -110,17 +104,20 @@ const SingleGoal = () => {
 
       <div className="bg-white rounded-lg shadow-lg p-8 mb-6">
         <h2 className="text-3xl font-semibold mb-6">Asset Allocation</h2>
-        <div className="flex justify-center items-center mb-6">
-          <PieChart
-            series={[{ data: assetAllocation, innerRadius: 80 }]}
-            width={750}
-            height={450}
-          />
-        </div>
+        {goal?.allocation?.length > 0 && (
+          <div className="flex justify-center items-center mb-6">
+            <PieChart
+              series={[{ data: goal?.allocation, innerRadius: 80 }]}
+              width={750}
+              height={450}
+            />
+          </div>
+        )}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-lg">
-          {assetAllocation.map((asset) => (
+          {goal?.allocation?.map((asset) => (
             <p key={asset.label} className="font-semibold text-gray-700">
-              <span className="capitalize">{asset.label}:</span> {asset.value}%
+              <span className="capitalize">{asset.label}:</span>{" "}
+              {parseFloat(asset.value).toFixed(2)}%
             </p>
           ))}
         </div>
@@ -133,7 +130,7 @@ const SingleGoal = () => {
               {
                 data: goal?.progress?.map((data) => data.progressNumber),
                 scaleType: "linear", // or "band", "log", etc.
-                label: "Progress Number",
+                label: "Progress ",
               },
             ]}
             yAxis={[
@@ -143,9 +140,16 @@ const SingleGoal = () => {
             ]}
             series={[
               {
+                area: true,
+                showMark: false,
                 data: goal?.progress?.map((data) => data.investment),
               },
             ]}
+            sx={{
+              [`& .${lineElementClasses.root}`]: {
+                display: "none",
+              },
+            }}
             width={700}
             height={300}
           />

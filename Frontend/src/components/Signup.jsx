@@ -29,7 +29,7 @@ const Signup = () => {
 
     try {
       if (confirmPassword !== formData.password) {
-        alert("ConfirmPassword and Password are not same");
+        alert("ConfirmPassword and Password are not the same");
         return;
       }
       console.log("Signup data:", formData);
@@ -43,9 +43,9 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-600 to-indigo-700">
+    <div className="min-h-screen bg-gradient-to-br from-green-400 to-teal-500 flex items-center justify-center">
       <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
-        <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-6">
+        <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">
           Create Your Account
         </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -60,7 +60,7 @@ const Signup = () => {
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full p-4 border border-gray-300 rounded-lg focus:ring-4 focus:ring-blue-400 focus:outline-none transition duration-300"
+              className="w-full p-4 border border-gray-300 rounded-lg focus:ring-4 focus:ring-green-500 focus:outline-none transition duration-300"
             />
           </div>
           <div>
@@ -74,7 +74,7 @@ const Signup = () => {
               value={formData.age}
               onChange={handleChange}
               required
-              className="w-full p-4 border border-gray-300 rounded-lg focus:ring-4 focus:ring-blue-400 focus:outline-none transition duration-300"
+              className="w-full p-4 border border-gray-300 rounded-lg focus:ring-4 focus:ring-green-500 focus:outline-none transition duration-300"
             />
           </div>
           <div>
@@ -88,7 +88,7 @@ const Signup = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full p-4 border border-gray-300 rounded-lg focus:ring-4 focus:ring-blue-400 focus:outline-none transition duration-300"
+              className="w-full p-4 border border-gray-300 rounded-lg focus:ring-4 focus:ring-green-500 focus:outline-none transition duration-300"
             />
           </div>
           <div>
@@ -103,7 +103,7 @@ const Signup = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-4 focus:ring-blue-400 focus:outline-none transition duration-300"
+                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-4 focus:ring-green-500 focus:outline-none transition duration-300"
               />
               <div
                 className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
@@ -121,11 +121,11 @@ const Signup = () => {
               <input
                 type={showConfirmPassword ? "text" : "password"} // Toggle confirm password visibility
                 name="confirmPassword"
-                placeholder="Enter your password"
+                placeholder="Confirm your password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-4 focus:ring-blue-400 focus:outline-none transition duration-300"
+                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-4 focus:ring-green-500 focus:outline-none transition duration-300"
               />
               <div
                 className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
@@ -137,7 +137,7 @@ const Signup = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-4 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
+            className="w-full bg-green-600 text-white p-4 rounded-lg font-semibold hover:bg-green-700 transition duration-300"
           >
             Sign Up
           </button>
@@ -146,7 +146,7 @@ const Signup = () => {
           Already have an account?{" "}
           <NavLink
             to="/login"
-            className="text-blue-600 font-semibold hover:underline"
+            className="text-green-600 font-semibold hover:underline"
           >
             Log In
           </NavLink>
