@@ -8,20 +8,34 @@ function Home() {
       <nav className="bg-gradient-to-r from-teal-600 to-teal-800 shadow-lg">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           {/* Logo */}
-          <div className="text-3xl font-bold text-teal-100 tracking-wide">Inverstophile</div>
+          <div className="text-3xl font-bold text-teal-100 tracking-wide">
+            Inverstophile
+          </div>
 
           {/* Navigation Links */}
           <div className="space-x-6 hidden md:flex">
-            <a href="#home" className="text-teal-100 text-lg font-medium hover:text-teal-300 transition">
+            <a
+              href="#home"
+              className="text-teal-100 text-lg font-medium hover:text-teal-300 transition"
+            >
               Home
             </a>
-            <a href="#about" className="text-teal-100 text-lg font-medium hover:text-teal-300 transition">
+            <a
+              href="#about"
+              className="text-teal-100 text-lg font-medium hover:text-teal-300 transition"
+            >
               About
             </a>
-            <a href="#features" className="text-teal-100 text-lg font-medium hover:text-teal-300 transition">
+            <a
+              href="#features"
+              className="text-teal-100 text-lg font-medium hover:text-teal-300 transition"
+            >
               Features
             </a>
-            <a href="#contact" className="text-teal-100 text-lg font-medium hover:text-teal-300 transition">
+            <a
+              href="#contact"
+              className="text-teal-100 text-lg font-medium hover:text-teal-300 transition"
+            >
               Contact
             </a>
           </div>
@@ -52,8 +66,9 @@ function Home() {
                 Unlock Your Financial Potential
               </h1>
               <p className="text-lg text-teal-200 mb-6">
-                Take charge of your investments with our platform. Discover new opportunities
-                across diverse asset classes and achieve financial freedom.
+                Take charge of your investments with our platform. Discover new
+                opportunities across diverse asset classes and achieve financial
+                freedom.
               </p>
               <NavLink to="/signup">
                 <button className="bg-teal-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-teal-600 transition">
@@ -75,48 +90,60 @@ function Home() {
       </header>
 
       {/* Features Section */}
-      <section id="features" className="py-16 bg-gradient-to-br from-black to-teal-800">
+      <section
+        id="features"
+        className="py-16 bg-gradient-to-br from-black to-teal-800"
+      >
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl font-extrabold text-teal-100 mb-8">Why Choose Us?</h2>
+          <h2 className="text-3xl font-extrabold text-teal-100 mb-8">
+            Why Choose Us?
+          </h2>
           <div className="grid md:grid-cols-3 gap-8">
             {/* Feature 1 */}
             <div className="bg-teal-700 shadow-lg rounded-lg p-6 hover:shadow-xl transition">
               <img
-                src="https://via.placeholder.com/80" // Replace with actual image for Diversification
+                src="https://www.datocms-assets.com/76408/1690452201-diversification-1.png" // Replace with actual image for Diversification
                 alt="Diversification"
                 className="mx-auto mb-4"
               />
-              <h3 className="text-xl font-semibold text-teal-100">Diversification</h3>
+              <h3 className="text-xl font-semibold text-teal-100">
+                Diversification
+              </h3>
               <p className="text-teal-200">
-                Maximize your returns with a balanced portfolio across multiple asset
-                classes.
+                Maximize your returns with a balanced portfolio across multiple
+                asset classes.
               </p>
             </div>
 
             {/* Feature 2 */}
             <div className="bg-teal-700 shadow-lg rounded-lg p-6 hover:shadow-xl transition">
               <img
-                src="https://via.placeholder.com/80" // Replace with actual image for Risk Assessment
+                src="https://eu-images.contentstack.com/v3/assets/blt07f68461ccd75245/blt77e60dbae0b45f57/6618064bf1336dcd3a2b41ea/GettyImages-1343006928-1401x788-49696df.jpeg" // Replace with actual image for Risk Assessment
                 alt="Risk Assessment"
                 className="mx-auto mb-4"
               />
-              <h3 className="text-xl font-semibold text-teal-100">Risk Assessment</h3>
+              <h3 className="text-xl font-semibold text-teal-100">
+                Risk Assessment
+              </h3>
               <p className="text-teal-200">
-                Tailored strategies based on your goals and risk tolerance to ensure
-                smarter decisions.
+                Tailored strategies based on your goals and risk tolerance to
+                ensure smarter decisions.
               </p>
             </div>
 
             {/* Feature 3 */}
             <div className="bg-teal-700 shadow-lg rounded-lg p-6 hover:shadow-xl transition">
               <img
-                src="https://via.placeholder.com/80" // Replace with actual image for Goal Tracking
+                src="https://agencyanalytics.com/_next/image?url=https%3A%2F%2Fimages.ctfassets.net%2Fdfcvkz6j859j%2F473RYZBe7hSHzxTWNGH4Dk%2F818e3d7833e56e2363e39849a3fb8774%2FSTREAM-goals-alternative-to-SMART-goals.png&w=2048&q=75" // Replace with actual image for Goal Tracking
                 alt="Goal Tracking"
                 className="mx-auto mb-4"
               />
-              <h3 className="text-xl font-semibold text-teal-100">Goal Tracking</h3>
+              <h3 className="text-xl font-semibold text-teal-100">
+                Goal Tracking
+              </h3>
               <p className="text-teal-200">
-                Stay on track with intuitive tools to measure your financial progress.
+                Stay on track with intuitive tools to measure your financial
+                progress.
               </p>
             </div>
           </div>
