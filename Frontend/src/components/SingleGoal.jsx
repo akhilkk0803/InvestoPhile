@@ -13,6 +13,7 @@ const SingleGoal = () => {
   const [newProgress, setNewProgress] = useState({
     investment: "",
   });
+  const currentAmount = goal?.progress?.at(-1).investment;
 
   useEffect(() => {
     if (location?.state?.goal) {
@@ -21,7 +22,6 @@ const SingleGoal = () => {
     }
   }, [location, goalid]);
 
-  // Handle updating the progress
   const handleUpdateProgress = async () => {
     if (newProgress.investment) {
       const updatedProgress = {
@@ -77,6 +77,12 @@ const SingleGoal = () => {
               ₹{goal.investmentAmount}
             </p>
             <p className="text-xl mb-4">
+              <span className="font-semibold text-gray-700">
+                Current Amount:
+              </span>{" "}
+              ₹{currentAmount}
+            </p>
+            <p className="text-xl mb-4">
               <span className="font-semibold text-gray-700">Duration:</span>{" "}
               {goal.duration} months
             </p>
@@ -100,6 +106,30 @@ const SingleGoal = () => {
             </p>
           </div>
         </div>
+        <div className="w-full bg-gray-200 rounded-full h-4">
+          <div
+            className="bg-green-500 h-4 rounded-full"
+            style={{
+              width: `${Math.min(
+                ((currentAmount - goal.investmentAmount) /
+                  (goal.targetAmount - goal.investmentAmount)) *
+                  100,
+                100
+              )}%`,
+            }}
+          ></div>
+        </div>
+        <p className="text-lg mt-2">
+          {Math.min(
+            (
+              ((currentAmount - goal.investmentAmount) /
+                (goal.targetAmount - goal.investmentAmount)) *
+              100
+            ).toFixed(2),
+            100
+          )}
+          % completed
+        </p>
       </div>
 
       <div className="bg-white rounded-lg shadow-lg p-8 mb-6">

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 const NavBar = () => {
   const navigate = useNavigate();
   const logouthandler = () => {
@@ -10,7 +10,9 @@ const NavBar = () => {
   return (
     <div>
       <nav className="flex justify-between items-center px-6 py-4 bg-green-500 text-white shadow-md">
-        <h1 className="text-2xl font-bold">Investophile</h1>
+        <NavLink to="/dashboard">
+          <h1 className="text-2xl font-bold">Investophile</h1>
+        </NavLink>
         <div className="text-lg">
           <span>Welcome, </span>
           <span className="font-semibold">{username}</span>

@@ -3,6 +3,8 @@ import { url } from "../url";
 import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // Importing the eye icons
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -17,6 +19,18 @@ const Signup = () => {
     password: "",
   });
 
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "error",
+    vertical: "top",
+    horizontal: "center",
+  });
+
+  const handleSnackbarClose = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -29,15 +43,37 @@ const Signup = () => {
 
     try {
       if (confirmPassword !== formData.password) {
-        alert("ConfirmPassword and Password are not the same");
+        setSnackbar({
+          open: true,
+          message: "Confirm Password and Password do not match.",
+          severity: "error",
+          vertical: "top",
+          horizontal: "right",
+        });
         return;
       }
-      console.log("Signup data:", formData);
+      setLoading(true);
       const res = await axios.post(url + "user/signup", formData);
       setLoading(false);
-      navigate("/login");
+
+      setSnackbar({
+        open: true,
+        message: "Signup successful! Redirecting to login...",
+        severity: "success",
+        vertical: "top",
+        horizontal: "right",
+      });
+
+      setTimeout(() => navigate("/login"), 3000); // Redirect after 3 seconds
     } catch (error) {
-      alert(error.response.data.message);
+      setSnackbar({
+        open: true,
+        message:
+          error.response?.data?.message || "Signup failed. Please try again.",
+        severity: "error",
+        vertical: "top",
+        horizontal: "right",
+      });
       setLoading(false);
     }
   };
@@ -139,7 +175,7 @@ const Signup = () => {
             type="submit"
             className="w-full bg-green-600 text-white p-4 rounded-lg font-semibold hover:bg-green-700 transition duration-300"
           >
-            Sign Up
+            {loading ? "Signing Up..." : "Sign Up"}
           </button>
         </form>
         <p className="text-center text-sm text-gray-600 mt-4">
@@ -152,6 +188,24 @@ const Signup = () => {
           </NavLink>
         </p>
       </div>
+      <Snackbar
+  open={snackbar.open}
+  autoHideDuration={6000}
+  onClose={handleSnackbarClose}
+  anchorOrigin={{ vertical: "top", horizontal: "right" }}
+>
+  <Alert
+    onClose={handleSnackbarClose}
+    severity={snackbar.severity}
+    sx={{
+      width: "100%",
+      backgroundColor: snackbar.severity === "error" ? "#8B0000" : "#006400", // Dark red for error, dark green for success
+      color: "white", 
+    }}
+  >
+    {snackbar.message}
+  </Alert>
+</Snackbar>
     </div>
   );
 };

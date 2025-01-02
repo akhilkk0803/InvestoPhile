@@ -1,13 +1,10 @@
-// goal webpage creation
-//goal name
-// investment type : sip, lump sum
-// investment ammount
-//risk tolerance  drop down -- very low, low, moderate,high, very high
-
 import React, { useState } from "react";
 import axios from "axios";
 import { url } from "../url";
 import { useNavigate } from "react-router-dom";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+
 const GoalForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -20,18 +17,42 @@ const GoalForm = () => {
     targetAmount: "",
   });
 
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success", // Can be "success" or "error"
+  });
+
+  const handleSnackbarClose = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
   const handleChange = async (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await axios.post(url + "user/createGoal", {
-      userToken: localStorage.getItem("token"),
-      goalDetails: formData,
-    });
-    alert("Goal created");
-    navigate("/dashboard");
+    try {
+      await axios.post(url + "user/createGoal", {
+        userToken: localStorage.getItem("token"),
+        goalDetails: formData,
+      });
+      setSnackbar({
+        open: true,
+        message: "Goal created successfully!",
+        severity: "success",
+      });
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 2000);
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: "Failed to create goal. Please try again.",
+        severity: "error",
+      });
+    }
   };
 
   return (
@@ -102,9 +123,11 @@ const GoalForm = () => {
             placeholder="Enter amount"
           />
         </div>
+
+        {/* Target Amount */}
         <div className="mb-4">
           <label
-            htmlFor="investmentAmount"
+            htmlFor="targetAmount"
             className="block text-sm font-medium text-gray-700"
           >
             Target Amount
@@ -116,9 +139,11 @@ const GoalForm = () => {
             value={formData.targetAmount}
             onChange={handleChange}
             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter amount"
+            placeholder="Enter target amount"
           />
         </div>
+
+        {/* Duration */}
         <div className="mb-4">
           <label
             htmlFor="duration"
@@ -133,7 +158,7 @@ const GoalForm = () => {
             value={formData.duration}
             onChange={handleChange}
             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter amount"
+            placeholder="Enter duration in months"
           />
         </div>
 
@@ -171,6 +196,27 @@ const GoalForm = () => {
           </button>
         </div>
       </form>
+
+      {/* Snackbar */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbar.severity}
+          sx={{
+            width: "100%",
+            backgroundColor:
+              snackbar.severity === "error" ? "#8B0000" : "#006400", // Dark red for error, dark green for success
+            color: "white",
+          }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

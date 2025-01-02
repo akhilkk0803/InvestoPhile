@@ -1,14 +1,32 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { url } from "../url";
+import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 import { NavLink, useNavigate } from "react-router-dom";
+import { url } from "../url";
+
 const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "error",
+    vertical: "top",
+    horizontal: "center",
+  });
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const { vertical, horizontal, open, message, severity } = snackbar;
+
+  const handleSnackbarClose = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -23,12 +41,25 @@ const Login = () => {
       setLoading(true);
       const res = await axios.post(url + "user/login", formData);
       setLoading(false);
+      setSnackbar({
+        open: true,
+        message: "Login Successfull redirecting to dashboard",
+        severity: "success",
+        vertical: "top",
+        horizontal: "right",
+      });
       localStorage.setItem("token", res.data.token);
       navigate("/dashboard");
     } catch (error) {
-      alert(error.response.data.message);
+      setSnackbar({
+        open: true,
+        message:
+          error.response?.data?.message || "Login failed. Please try again.",
+        severity: "error",
+        vertical: "top",
+        horizontal: "right",
+      });
       setLoading(false);
-      return;
     }
   };
 
@@ -50,6 +81,7 @@ const Login = () => {
               value={formData.email}
               onChange={handleChange}
               required
+              aria-label="Email"
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
             />
           </div>
@@ -64,6 +96,7 @@ const Login = () => {
               value={formData.password}
               onChange={handleChange}
               required
+              aria-label="Password"
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
             />
           </div>
@@ -84,6 +117,25 @@ const Login = () => {
           </NavLink>
         </p>
       </div>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={severity}
+          sx={{
+            width: "100%",
+            backgroundColor:
+              snackbar.severity === "error" ? "#8B0000" : "#006400", // Dark red for error, dark green for success
+            color: "white",
+          }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
