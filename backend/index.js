@@ -20,6 +20,6 @@ app.use("/user", userRoutes);
 app.use((err, req, res, next) => {
   res.status(err.statusCode).json({ message: err.message });
 });
-app.listen(8080, () => {
+app.listen(9090, () => {
   console.log("server is running on port 8080");
 });
