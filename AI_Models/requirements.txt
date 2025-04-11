@@ -1,3 +1,6 @@
+Flask
 pandas
 numpy
-matplotlib
+scipy
+python-dotenv
+nixtla
