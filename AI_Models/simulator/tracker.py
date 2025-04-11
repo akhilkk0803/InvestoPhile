@@ -1,26 +1,29 @@
 import pandas as pd
-from models.ranker import momentum_ranker
-from mpt.rebalance import rebalance
 
-def simulate_portfolio(prices, init_weights, rebalance_freq='3M', lookback=30):
-    weights = init_weights.copy()
-    portfolio_value = [1.0]  # Start with $1
+def simulate_portfolio(prices, initial_weights, ranker=None, rebalance_months=None):
+    portfolio = pd.Series(dtype=float)
+    weights = pd.Series(initial_weights)
     last_rebalance = prices.index[0]
 
-    for i in range(1, len(prices)):
-        today = prices.index[i]
-        prev_day = prices.index[i - 1]
-        returns = prices.pct_change().iloc[i]
+    if rebalance_months:
+        rebalance_offset = pd.DateOffset(months=rebalance_months)
+    else:
+        rebalance_offset = pd.DateOffset(months=1)  # default 1 month
 
-        # Compute daily portfolio return
-        daily_return = sum(weights[asset] * returns[asset] for asset in weights)
-        new_value = portfolio_value[-1] * (1 + daily_return)
-        portfolio_value.append(new_value)
+    for today in prices.index:
+        if today == prices.index[0]:
+            portfolio[today] = (prices.loc[today] * weights).sum()
+            continue
 
-        # Check if it's time to rebalance
-        if today - last_rebalance >= pd.Timedelta(rebalance_freq):
-            rankings = momentum_ranker(prices[:i], lookback)
-            weights = rebalance(weights, rankings)
+        if today >= last_rebalance + rebalance_offset:
+            if ranker:
+                ranked_assets = ranker.rank(prices.loc[:today])
+                # Update weights only for ranked assets and normalize
+                weights = pd.Series({asset: 1 / len(ranked_assets) for asset in ranked_assets})
             last_rebalance = today
 
-    return pd.Series(portfolio_value, index=prices.index)
+        # Align weights with today's prices (in case some assets are missing)
+        aligned_weights = weights.reindex(prices.columns).fillna(0)
+        portfolio[today] = (prices.loc[today] * aligned_weights).sum()
+
+    return portfolio
