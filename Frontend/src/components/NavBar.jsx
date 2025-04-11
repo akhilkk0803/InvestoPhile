@@ -1,24 +1,28 @@
 import React, { useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
+
 const NavBar = () => {
   const navigate = useNavigate();
   const logouthandler = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
-  const [username, setusername] = useState("");
+  const [username, setusername] = useState("User");
+
   return (
     <div>
-      <nav className="flex justify-between items-center px-6 py-4 bg-green-500 text-white shadow-md">
-        <NavLink to="/dashboard">
-          <h1 className="text-2xl font-bold">Investophile</h1>
+      <nav className="flex justify-between items-center px-8 py-4 bg-teal-600 text-white shadow-lg">
+        <NavLink to="/dashboard" className="text-3xl font-bold hover:text-teal-300 transition duration-200">
+          Investophile
         </NavLink>
-        <div className="text-lg">
-          <span>Welcome, </span>
-          <span className="font-semibold">{username}</span>
-        </div>
+    
         <div>
-          <button onClick={logouthandler}>Logout</button>
+          <button
+            onClick={logouthandler}
+            className="bg-teal-500 px-4 py-2 rounded-lg font-semibold hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-300 transition duration-200"
+          >
+            Logout
+          </button>
         </div>
       </nav>
     </div>

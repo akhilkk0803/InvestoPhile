@@ -47,186 +47,161 @@ const SingleGoal = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-lg shadow-lg p-8 mb-6">
-        <h1 className="text-4xl font-extrabold">
-          {goal.goalName || "Goal Details"}
-        </h1>
-        <p className="mt-2 text-xl">
-          Created on:{" "}
-          <span className="font-semibold">
-            {new Date(goal.createdAt).toLocaleDateString()}
-          </span>
-        </p>
-      </div>
-
-      <div className="bg-white rounded-lg shadow-lg p-8 mb-6">
-        <h2 className="text-3xl font-semibold mb-6">Goal Summary</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <p className="text-xl mb-4">
-              <span className="font-semibold text-gray-700">
-                Target Amount:
-              </span>{" "}
-              ₹{goal.targetAmount}
-            </p>
-            <p className="text-xl mb-4">
-              <span className="font-semibold text-gray-700">
-                Investment Amount:
-              </span>{" "}
-              ₹{goal.investmentAmount}
-            </p>
-            <p className="text-xl mb-4">
-              <span className="font-semibold text-gray-700">
-                Current Amount:
-              </span>{" "}
-              ₹{currentAmount}
-            </p>
-            <p className="text-xl mb-4">
-              <span className="font-semibold text-gray-700">Duration:</span>{" "}
-              {goal.duration} months
-            </p>
-          </div>
-          <div>
-            <p className="text-xl mb-4">
-              <span className="font-semibold text-gray-700">
-                Investment Type:
-              </span>{" "}
-              {goal.investmentType}
-            </p>
-            <p className="text-xl mb-4">
-              <span className="font-semibold text-gray-700">Frequency:</span>{" "}
-              {goal.frequency}
-            </p>
-            <p className="text-xl mb-4">
-              <span className="font-semibold text-gray-700">
-                Risk Tolerance:
-              </span>{" "}
-              {goal.riskTolerance}
-            </p>
-          </div>
+    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+      <div className="max-w-5xl mx-auto space-y-8">
+  
+        {/* Header */}
+        <div className="bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl shadow-lg p-6 md:p-10">
+          <h1 className="text-3xl md:text-5xl font-extrabold flex items-center gap-3">
+            🎯 {goal.goalName || "Goal Details"}
+          </h1>
+          <p className="mt-2 text-lg md:text-xl">
+            Created on:{" "}
+            <span className="font-semibold">
+              {new Date(goal.createdAt).toLocaleDateString()}
+            </span>
+          </p>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-4">
-          <div
-            className="bg-green-500 h-4 rounded-full"
-            style={{
-              width: `${Math.min(
-                ((currentAmount - goal.investmentAmount) /
-                  (goal.targetAmount - goal.investmentAmount)) *
-                  100,
-                100
-              )}%`,
-            }}
-          ></div>
-        </div>
-        <p className="text-lg mt-2">
-          {Math.min(
-            (
-              ((currentAmount - goal.investmentAmount) /
-                (goal.targetAmount - goal.investmentAmount)) *
-              100
-            ).toFixed(2),
-            100
-          )}
-          % completed
-        </p>
-      </div>
-
-      <div className="bg-white rounded-lg shadow-lg p-8 mb-6">
-        <h2 className="text-3xl font-semibold mb-6">Asset Allocation</h2>
-        {goal?.allocation?.length > 0 && (
-          <div className="flex justify-center items-center mb-6">
-            <PieChart
-              series={[{ data: goal?.allocation, innerRadius: 80 }]}
-              width={750}
-              height={450}
-            />
+  
+        {/* Goal Summary */}
+        <div className="bg-white rounded-xl shadow p-6 md:p-10">
+          <h2 className="text-2xl font-bold mb-6">📋 Goal Summary</h2>
+  
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-4 text-gray-800 text-lg">
+              <p><strong>🎯 Target Amount:</strong> ₹{goal.targetAmount}</p>
+              <p><strong>💰 Initial Investment:</strong> ₹{goal.investmentAmount}</p>
+              <p><strong>📈 Current Amount:</strong> ₹{currentAmount}</p>
+              <p><strong>⏳ Duration:</strong> {goal.duration} months</p>
+            </div>
+            <div className="space-y-4 text-gray-800 text-lg">
+              <p><strong>📊 Investment Type:</strong> {goal.investmentType}</p>
+              <p><strong>🔁 Frequency:</strong> {goal.frequency}</p>
+              <p><strong>⚖️ Risk Tolerance:</strong> {goal.riskTolerance}</p>
+            </div>
           </div>
-        )}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-lg">
-          {goal?.allocation?.map((asset) => (
-            <p key={asset.label} className="font-semibold text-gray-700">
-              <span className="capitalize">{asset.label}:</span>{" "}
-              {parseFloat(asset.value).toFixed(2)}%
-            </p>
-          ))}
-        </div>
-      </div>
-
-      <div className="bg-white rounded-lg shadow-lg p-8 mb-6 flex justify-center items-center flex-col">
-        {goal?.progress?.length > 0 ? (
-          <LineChart
-            xAxis={[
-              {
-                data: goal?.progress?.map((data) => data.progressNumber),
-                scaleType: "linear", // or "band", "log", etc.
-                label: "Progress ",
-              },
-            ]}
-            yAxis={[
-              {
-                label: "Current Amount",
-              },
-            ]}
-            series={[
-              {
-                area: true,
-                showMark: false,
-                data: goal?.progress?.map((data) => data.investment),
-              },
-            ]}
-            sx={{
-              [`& .${lineElementClasses.root}`]: {
-                display: "none",
-              },
-            }}
-            width={700}
-            height={300}
-          />
-        ) : (
-          <div>No progress data available</div>
-        )}
-        <button
-          onClick={() => setShowProgressForm(!showProgressForm)}
-          className="bg-teal-500 text-white px-6 py-2 rounded-md hover:bg-teal-600"
-        >
-          {showProgressForm ? "Cancel" : "Update Progress"}
-        </button>
-
-        {showProgressForm && (
+  
+          {/* Animated Progress Bar */}
           <div className="mt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <label className="block text-xl font-semibold text-gray-700 mb-2">
-                  Current Amount
-                </label>
-                <input
-                  type="number"
-                  value={newProgress.investment}
-                  onChange={(e) =>
-                    setNewProgress({
-                      ...newProgress,
-                      investment: e.target.value,
-                    })
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                  placeholder="Enter current amount"
+            <div className="w-full bg-gray-300 rounded-full h-5 overflow-hidden">
+              <div
+                className="bg-green-500 h-full transition-all duration-700 ease-out"
+                style={{
+                  width: `${Math.min(
+                    ((currentAmount - goal.investmentAmount) /
+                      (goal.targetAmount - goal.investmentAmount)) *
+                      100,
+                    100
+                  )}%`,
+                }}
+              />
+            </div>
+            <p className="mt-2 text-lg text-center font-semibold">
+              {Math.min(
+                (
+                  ((currentAmount - goal.investmentAmount) /
+                    (goal.targetAmount - goal.investmentAmount)) *
+                  100
+                ).toFixed(2),
+                100
+              )}
+              % completed
+            </p>
+          </div>
+        </div>
+  
+        {/* Asset Allocation */}
+        <div className="bg-white rounded-xl shadow p-6 md:p-10">
+          <h2 className="text-2xl font-bold mb-6">📦 Asset Allocation</h2>
+          {goal?.allocation?.length > 0 && (
+            <>
+              <div className="flex justify-center items-center mb-6">
+                <PieChart
+                  series={[{ data: goal?.allocation, innerRadius: 80 }]}
+                  width={750}
+                  height={450}
                 />
               </div>
-            </div>
-            <div className="mt-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-lg text-gray-700 font-medium">
+                {goal?.allocation?.map((asset) => (
+                  <div key={asset.label}>
+                    <span className="capitalize">{asset.label}:</span>{" "}
+                    {parseFloat(asset.value).toFixed(2)}%
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+  
+        {/* Progress Chart */}
+        <div className="bg-white rounded-xl shadow p-6 md:p-10 flex flex-col items-center space-y-6">
+          <h2 className="text-2xl font-bold">📊 Progress Over Time</h2>
+          {goal?.progress?.length > 0 ? (
+            <LineChart
+              xAxis={[
+                {
+                  data: goal?.progress?.map((d) => d.progressNumber),
+                  scaleType: "linear",
+                  label: "Progress",
+                },
+              ]}
+              yAxis={[{ label: "Amount" }]}
+              series={[
+                {
+                  area: true,
+                  showMark: true,
+                  data: goal?.progress?.map((d) => d.investment),
+                },
+              ]}
+              sx={{
+                [`& .${lineElementClasses.root}`]: {
+                  display: "none",
+                },
+              }}
+              width={700}
+              height={300}
+            />
+          ) : (
+            <p className="text-gray-500">No progress data available.</p>
+          )}
+  
+          {/* Toggle Button */}
+          <button
+            onClick={() => setShowProgressForm(!showProgressForm)}
+            className="bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-2 rounded-md transition"
+          >
+            {showProgressForm ? "Cancel" : "➕ Update Progress"}
+          </button>
+  
+          {/* Add Progress Form */}
+          {showProgressForm && (
+            <div className="w-full md:w-1/2 mt-4">
+              <label className="block text-lg font-medium text-gray-700 mb-2">
+                Enter Updated Amount
+              </label>
+              <input
+                type="number"
+                value={newProgress.investment}
+                onChange={(e) =>
+                  setNewProgress({ ...newProgress, investment: e.target.value })
+                }
+                className="w-full px-4 py-2 border rounded-md"
+                placeholder="₹ Current amount"
+              />
               <button
                 onClick={handleUpdateProgress}
-                className="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600"
+                className="mt-4 bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-md transition"
               >
-                Add Progress
+                ✅ Add Progress
               </button>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
+  
 };
 
 export default SingleGoal;
