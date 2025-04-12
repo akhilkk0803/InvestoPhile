@@ -4,14 +4,17 @@ import { useNavigate, NavLink } from "react-router-dom";
 function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-900 via-gray-900 to-teal-800 text-white">
+      {/* Navigation Bar */}
       <nav className="bg-gradient-to-r from-teal-600 to-teal-800 shadow-xl sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           {/* Logo */}
           <div className="text-3xl font-extrabold text-white tracking-wide">
             Inverstophile
           </div>
+
+          {/* Navigation Links */}
           <div className="space-x-6 hidden md:flex">
-            {["Home", "Features", "About", "Contact"].map((text) => (
+            {["Home", "About", "Features", "Contact"].map((text) => (
               <a
                 key={text}
                 href={`#${text.toLowerCase()}`}
@@ -43,7 +46,7 @@ function Home() {
               <h1 className="text-5xl md:text-6xl font-extrabold text-teal-100 leading-tight">
                 Unlock Your Financial Potential
               </h1>
-              <p className="text-lg text-teal-300 pb-5">
+              <p className="text-lg text-teal-300">
                 Take charge of your investments with our platform. Discover new
                 opportunities across diverse asset classes and achieve financial
                 freedom.
@@ -84,7 +87,7 @@ function Home() {
                 title: "Diversification",
                 description:
                   "Maximize your returns with a balanced portfolio across multiple asset classes.",
-                img: "https://knowledge.wharton.upenn.edu/wp-content/uploads/2023/06/7.5.23-itay-goldstein-bank-diversification-GettyImages-1287845196.jpg",
+                img: "https://www.datocms-assets.com/76408/1690452201-diversification-1.png",
               },
               {
                 title: "Risk Assessment",
@@ -106,7 +109,7 @@ function Home() {
                 <img
                   src={feature.img}
                   alt={feature.title}
-                  className="mx-auto mb-4 w-full h-full object-cover rounded-md"
+                  className="mx-auto mb-4 w-full h-40 object-cover rounded-md"
                 />
                 <h3 className="text-xl font-semibold text-white">
                   {feature.title}
