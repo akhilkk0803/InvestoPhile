@@ -4,15 +4,12 @@ import { useNavigate, NavLink } from "react-router-dom";
 function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-900 via-gray-900 to-teal-800 text-white">
-      {/* Navigation Bar */}
       <nav className="bg-gradient-to-r from-teal-600 to-teal-800 shadow-xl sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           {/* Logo */}
           <div className="text-3xl font-extrabold text-white tracking-wide">
             Inverstophile
           </div>
-
-          {/* Navigation Links */}
           <div className="space-x-6 hidden md:flex">
             {["Home", "Features", "About", "Contact"].map((text) => (
               <a
@@ -25,7 +22,6 @@ function Home() {
             ))}
           </div>
 
-          {/* Authentication Buttons */}
           <div className="space-x-4">
             <NavLink to="/signup">
               <button className="bg-teal-500 px-4 py-2 rounded-lg font-semibold hover:bg-teal-600 shadow hover:shadow-md transition duration-200">
@@ -40,12 +36,9 @@ function Home() {
           </div>
         </div>
       </nav>
-
-      {/* Hero Section */}
       <header className="py-20 bg-gradient-to-br from-teal-800 to-black">
         <div className="container mx-auto px-6 text-center md:text-left">
           <div className="md:flex items-center justify-between">
-            {/* Left Content */}
             <div className="md:w-1/2 space-y-6">
               <h1 className="text-5xl md:text-6xl font-extrabold text-teal-100 leading-tight">
                 Unlock Your Financial Potential
@@ -73,7 +66,6 @@ function Home() {
           </div>
         </div>
       </header>
-
       {/* Features Section */}
       <section
         id="features"
@@ -125,12 +117,70 @@ function Home() {
           </div>
         </div>
       </section>
+      {/* Contact Us Section */}
+      <section
+        id="contact"
+        className="py-20 bg-gradient-to-br from-teal-800 to-black text-center"
+      >
+        <div className="container mx-auto px-6">
+          <h2 className="text-4xl font-bold text-teal-100 mb-4">
+            Meet Our Team
+          </h2>
+          <p className="text-teal-300 text-md mb-12 max-w-2xl mx-auto">
+            We’re a team of passionate individuals committed to simplifying your
+            financial journey.
+          </p>
 
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                name: "Abhishekh",
+                role: "Frontend Developer",
+                img: "https://api.dicebear.com/7.x/initials/svg?seed=Akhil+Kumar",
+                email: "akhil@example.com",
+              },
+              {
+                name: "Madhurank Hegde",
+                role: "Ai Developer",
+                img: "https://api.dicebear.com/7.x/initials/svg?seed=Rahul+Verma",
+                email: "rahul@example.com",
+              },
+              {
+                name: "Akhil K Kulkarni",
+                role: "Backend Developer",
+                img: "https://api.dicebear.com/7.x/initials/svg?seed=Sneha+Patel",
+                email: "akhilkk0803@gmail.com",
+              },
+            ].map((member) => (
+              <div
+                key={member.name}
+                className="bg-teal-700 rounded-xl p-6 shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-1"
+              >
+                <img
+                  src={member.img}
+                  alt={member.name}
+                  className="w-24 h-24 mx-auto rounded-full mb-4"
+                />
+                <h3 className="text-xl font-semibold text-white">
+                  {member.name}
+                </h3>
+                <p className="text-teal-200">{member.role}</p>
+                <a
+                  href={`mailto:${member.email}`}
+                  className="text-teal-400 hover:underline block mt-2 text-sm"
+                >
+                  {member.email}
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
       {/* Footer */}
       <footer className="bg-black text-white py-10 border-t border-teal-600">
         <div className="container mx-auto text-center">
           <p className="text-teal-300 font-medium">
-            &copy; 2024 Inverstophile. Your trusted partner in wealth creation.
+            &copy; 2025 Inverstophile. Your trusted partner in wealth creation.
           </p>
         </div>
       </footer>
