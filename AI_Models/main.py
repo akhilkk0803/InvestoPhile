@@ -20,10 +20,11 @@ def get_portfolio():
         risk_level = int(data["risk_level"])
 
         prices_df = pd.read_csv(CSV_PATH, index_col=0, parse_dates=True)
+        print(prices_df.head())
 
-        # ✅ Fix applied here
         forecast_df = get_forecasted_prices(prices_df, duration_months)
-
+        print(forecast_df)
+        
         result = mpt_optimizer_from_df(
             forecast_df,
             risk_level=risk_level
