@@ -5,6 +5,7 @@ import { url } from "../url";
 import Chart from "../utility/Chart";
 const DashBoard = () => {
   const [goal, setGoals] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleCreateGoal = () => {
@@ -13,16 +14,25 @@ const DashBoard = () => {
 
   useEffect(() => {
     if (!localStorage.getItem("token")) navigate("/");
+    setIsLoading(true);
     axios
       .post(url + "user/getGoals", {
         userToken: localStorage.getItem("token"),
       })
       .then((goals) => {
         setGoals(goals.data);
+      }).finally(() => {
+        setIsLoading(false);
       });
   }, []);
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 py-10 px-6">
+      {/* Loading Bar */}
+      {isLoading && (
+        <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
+          <div className="h-full bg-blue-600 animate-pulse"></div>
+        </div>
+      )}
       <div className="flex justify-between items-center mb-10">
         <h1 className="text-3xl font-bold text-gray-800">Your Dashboard</h1>
         <button
@@ -33,7 +43,7 @@ const DashBoard = () => {
         </button>
       </div>
       {/* Goals */}
-      {goal.length == 0 && <div>No goals created yet</div>}
+      {!isLoading && goal.length == 0 && <div>No goals created yet</div>}
       <div className="flex flex-wrap">
         {goal.map((el) => (
           <div className="border-2 p-4 ">
@@ -44,7 +54,7 @@ const DashBoard = () => {
               <h2 className="text-xl font-bold">{el.goalName}</h2>
               <p className="text-gray-500">{el.description}</p>
               <p className="text-gray-500">Target Amount: {el.targetAmount} |  Current Amount: {el.investmentAmount}</p>
-              </div>
+            </div>
           </div>
         ))}
       </div>
