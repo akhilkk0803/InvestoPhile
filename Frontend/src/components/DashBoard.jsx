@@ -47,7 +47,7 @@ const DashBoard = () => {
       {!isLoading && goal.length == 0 && <div>No goals created yet</div>}
       <div className="flex flex-wrap gap-8">
         {goal.map((el) => (
-          <div className="border-2 p-4 ">
+          <div className="border-2 p-4 rounded-xl">
             <div>
               <Chart goal={el} />
             </div>
