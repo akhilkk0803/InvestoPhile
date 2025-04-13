@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { url } from "../url";
 import Chart from "../utility/Chart";
+import LinearProgress from "@mui/material/LinearProgress";
 const DashBoard = () => {
   const [goal, setGoals] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,8 +30,8 @@ const DashBoard = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 py-10 px-6">
       {/* Loading Bar */}
       {isLoading && (
-        <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
-          <div className="h-full bg-blue-600 animate-pulse"></div>
+        <div className="mb-10">
+          <LinearProgress color="primary" />
         </div>
       )}
       <div className="flex justify-between items-center mb-10">
@@ -44,7 +45,7 @@ const DashBoard = () => {
       </div>
       {/* Goals */}
       {!isLoading && goal.length == 0 && <div>No goals created yet</div>}
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap gap-8">
         {goal.map((el) => (
           <div className="border-2 p-4 ">
             <div>
