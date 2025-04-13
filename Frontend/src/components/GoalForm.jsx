@@ -20,20 +20,45 @@ const GoalForm = () => {
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
-    severity: "success", // Can be "success" or "error"
+    severity: "success",
   });
 
   const handleSnackbarClose = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
-  const handleChange = async (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "investmentType" && value === "Sip") {
+      setSnackbar({
+        open: true,
+        message: "SIP option is in progress and will be available soon!",
+        severity: "info",
+      });
+
+      setFormData((prev) => ({
+        ...prev,
+        investmentType: "",
+      }));
+      return;
+    }
+
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      if (formData.investmentType === "Sip") {
+        setSnackbar({
+          open: true,
+          message: "SIP option is not available yet!",
+          severity: "info",
+        });
+        return;
+      }
+
       await axios.post(url + "user/createGoal", {
         userToken: localStorage.getItem("token"),
         goalDetails: formData,
@@ -100,12 +125,13 @@ const GoalForm = () => {
             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">Select an option</option>
-            <option value="Sip">SIP</option>
+            <option value="Sip" >
+              SIP
+            </option>
             <option value="Lumpsum">Lump Sum</option>
           </select>
         </div>
 
-        {/* Investment Amount */}
         <div className="mb-4">
           <label
             htmlFor="investmentAmount"
