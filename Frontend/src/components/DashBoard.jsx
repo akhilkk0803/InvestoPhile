@@ -35,7 +35,7 @@ const DashBoard = () => {
         </div>
       )}
       <div className="flex justify-between items-center mb-10">
-        <h1 className="text-3xl font-bold text-gray-800">Your Dashboard</h1>
+        <h1 className="text-3xl font-bold text-gray-800">My Goals</h1>
         <button
           onClick={handleCreateGoal}
           className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition"
