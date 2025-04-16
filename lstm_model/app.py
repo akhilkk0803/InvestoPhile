@@ -62,7 +62,8 @@ def optimize_portfolio():
         initial_weights = portfolio_optimizer.optimize(
             df_calc,
             expected_return,
-            risk_capacity
+            risk_capacity,
+            duration
         )
         logger.info("MPT optimization completed")
         
@@ -79,7 +80,8 @@ def optimize_portfolio():
         # Calculate portfolio metrics
         portfolio_metrics = portfolio_optimizer.calculate_metrics(
             df_calc,
-            final_weights
+            final_weights,
+            duration
         )
         
         logger.info("Optimization completed successfully")
