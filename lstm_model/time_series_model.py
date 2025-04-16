@@ -14,7 +14,7 @@ class TimeSeriesModel:
     def __init__(self):
         self.model = None
         self.scaler = MinMaxScaler()
-        self.sequence_length = 60  # 60 days of historical data
+        self.sequence_length = 12  # 12 months of historical data
         self.max_epochs = 50  # Limit training epochs
         self.model_path = 'saved_model'
         self.scaler_path = 'saved_scaler.pkl'
@@ -56,7 +56,7 @@ class TimeSeriesModel:
     def prepare_data(self, df):
         """Prepare data for LSTM model"""
         logger.info("Preparing data for LSTM model")
-        # Calculate returns
+        # Calculate monthly returns
         returns = df.pct_change().dropna()
         
         # Scale the data
@@ -73,9 +73,9 @@ class TimeSeriesModel:
         """Build LSTM model"""
         logger.info("Building LSTM model")
         model = Sequential([
-            LSTM(50, return_sequences=True, input_shape=input_shape),
+            LSTM(64, return_sequences=True, input_shape=input_shape),
             Dropout(0.2),
-            LSTM(50, return_sequences=False),
+            LSTM(32, return_sequences=False),
             Dropout(0.2),
             Dense(input_shape[1])
         ])
@@ -102,7 +102,7 @@ class TimeSeriesModel:
             self.model.fit(
                 X, y,
                 epochs=self.max_epochs,
-                batch_size=32,
+                batch_size=16,
                 verbose=0,
                 validation_split=0.2
             )
@@ -115,8 +115,8 @@ class TimeSeriesModel:
         last_sequence = X[-1:]
         predictions = []
         
-        max_predictions = duration * 21  # 21 trading days per month
-        for i in range(max_predictions):
+        # Make predictions for the specified duration
+        for i in range(duration):
             pred = self.model.predict(last_sequence, verbose=0)
             predictions.append(pred[0])
             
@@ -124,8 +124,8 @@ class TimeSeriesModel:
             last_sequence = np.roll(last_sequence, -1, axis=1)
             last_sequence[0, -1] = pred[0]
             
-            if i % 10 == 0:  # Log progress every 10 predictions
-                logger.info(f"Made {i+1}/{max_predictions} predictions")
+            if i % 3 == 0:  # Log progress every 3 months
+                logger.info(f"Made {i+1}/{duration} monthly predictions")
         
         # Convert predictions back to original scale
         predictions = self.scaler.inverse_transform(np.array(predictions))
