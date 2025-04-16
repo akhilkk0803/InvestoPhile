@@ -18,8 +18,9 @@ class PortfolioOptimizer:
         
     def calculate_portfolio_metrics(self, returns, weights):
         """Calculate portfolio return and volatility"""
-        portfolio_return = np.sum(returns.mean() * weights) * 252  # Annualized return
-        portfolio_volatility = np.sqrt(np.dot(weights.T, np.dot(returns.cov() * 252, weights)))
+        # Annualize monthly returns (multiply by 12)
+        portfolio_return = np.sum(returns.mean() * weights) * 12
+        portfolio_volatility = np.sqrt(np.dot(weights.T, np.dot(returns.cov() * 12, weights)))
         sharpe_ratio = (portfolio_return - self.risk_free_rate) / portfolio_volatility
         return portfolio_return, portfolio_volatility, sharpe_ratio
     
@@ -28,14 +29,14 @@ class PortfolioOptimizer:
         Optimize portfolio weights using Modern Portfolio Theory
         Args:
             df: DataFrame with asset prices
-            expected_return: Target return
+            expected_return: Target annual return
             risk_capacity: Risk tolerance (1-5 scale)
         """
         logger.info("Starting MPT optimization")
         # Convert risk capacity to risk aversion parameter
         risk_aversion = 6 - risk_capacity  # Higher risk capacity = lower risk aversion
         
-        # Calculate returns
+        # Calculate monthly returns
         returns = df.pct_change().dropna()
         
         # Number of assets
@@ -47,7 +48,7 @@ class PortfolioOptimizer:
         # Constraints
         constraints = [
             {'type': 'eq', 'fun': lambda x: np.sum(x) - 1},  # weights sum to 1
-            {'type': 'eq', 'fun': lambda x: np.sum(returns.mean() * x) * 252 - expected_return}  # target return
+            {'type': 'eq', 'fun': lambda x: np.sum(returns.mean() * x) * 12 - expected_return}  # target annual return
         ]
         
         # Add asset-specific constraints
@@ -64,8 +65,8 @@ class PortfolioOptimizer:
         
         # Objective function: minimize volatility with risk aversion and asset-specific risk factors
         def objective(weights):
-            portfolio_vol = np.sqrt(np.dot(weights.T, np.dot(returns.cov() * 252, weights)))
-            portfolio_return = np.sum(returns.mean() * weights) * 252
+            portfolio_vol = np.sqrt(np.dot(weights.T, np.dot(returns.cov() * 12, weights)))
+            portfolio_return = np.sum(returns.mean() * weights) * 12
             
             # Add asset-specific risk adjustments
             risk_adjustment = 0
@@ -106,7 +107,7 @@ class PortfolioOptimizer:
         for i, asset in enumerate(df.columns):
             asset_metrics[asset] = {
                 'weight': float(weights[i]),
-                'contribution': float(weights[i] * returns[asset].mean() * 252)
+                'contribution': float(weights[i] * returns[asset].mean() * 12)  # Annualized contribution
             }
         
         return {

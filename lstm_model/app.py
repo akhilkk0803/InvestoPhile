@@ -18,7 +18,7 @@ portfolio_optimizer = PortfolioOptimizer()
 time_series_model = TimeSeriesModel()
 
 # Fixed path for the historical data
-HISTORICAL_DATA_PATH = os.path.join(os.path.dirname(__file__), 'historical_data.csv')
+HISTORICAL_DATA_PATH = os.path.join(os.path.dirname(__file__), 'historical_monthly_data.csv')
 
 @app.route('/optimize', methods=['POST'])
 def optimize_portfolio():
@@ -39,15 +39,12 @@ def optimize_portfolio():
             logger.error("Historical data file not found")
             return jsonify({
                 'status': 'error',
-                'message': 'Historical data file not found. Please run generate_sample_data.py first.'
+                'message': 'Historical data file not found. Please run generate_monthly_data.py first.'
             }), 400
             
         # Read CSV with proper data types
-        logger.info("Reading historical data")
-        df = pd.read_csv(HISTORICAL_DATA_PATH)
-        
-        # Convert Date column to datetime
-        df['Date'] = pd.to_datetime(df['Date'])
+        logger.info("Reading historical monthly data")
+        df = pd.read_csv(HISTORICAL_DATA_PATH, index_col=0, parse_dates=True)
         
         # Convert numeric columns to float
         numeric_columns = ['nifty_50', 'fd', 'gold', 'govt_bond', 'mf']
@@ -57,7 +54,7 @@ def optimize_portfolio():
         # Drop any rows with NaN values
         df = df.dropna()
         
-        # Create a copy of the DataFrame without the Date column for calculations
+        # Create a copy of the DataFrame for calculations
         df_calc = df[numeric_columns].copy()
         
         logger.info("Starting MPT optimization")
