@@ -49,7 +49,9 @@ const Login = () => {
         horizontal: "right",
       });
       localStorage.setItem("token", res.data.token);
-      navigate("/dashboard");
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 2000);
     } catch (error) {
       setSnackbar({
         open: true,

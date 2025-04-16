@@ -134,7 +134,6 @@ const SingleGoal = () => {
           )}
         </div>
   
-        {/* Progress Chart */}
         <div className="bg-white rounded-xl shadow p-6 md:p-10 flex flex-col items-center space-y-6">
           <h2 className="text-2xl font-bold">📊 Progress Over Time</h2>
           {goal?.progress?.length > 0 ? (

@@ -33,7 +33,8 @@ const GoalForm = () => {
     if (name === "investmentType" && value === "Sip") {
       setSnackbar({
         open: true,
-        message: "SIP option is in progress and will be available soon!",
+        message: "Will be avaiable soon",
+        severity: "info",
         severity: "info",
       });
 
@@ -49,25 +50,27 @@ const GoalForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      if (formData.investmentType === "Sip") {
-        setSnackbar({
-          open: true,
-          message: "SIP option is not available yet!",
-          severity: "info",
-        });
-        return;
-      }
+    if (formData.investmentType === "Sip") {
+      setSnackbar({
+        open: true,
+        message: "SIP option is not available yet!",
+        severity: "info",
+      });
+      return;
+    }
 
+    try {
       await axios.post(url + "user/createGoal", {
         userToken: localStorage.getItem("token"),
         goalDetails: formData,
       });
+
       setSnackbar({
         open: true,
         message: "Goal created successfully!",
         severity: "success",
       });
+
       setTimeout(() => {
         navigate("/dashboard");
       }, 2000);
@@ -81,152 +84,154 @@ const GoalForm = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen  p-4">
       <form
-        className="w-full max-w-md bg-white p-6 rounded-lg shadow-md"
+        className="w-full max-w-xl bg-white p-8 rounded-2xl shadow-xl border border-gray-200"
         onSubmit={handleSubmit}
       >
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">
-          Create Your Goal
+        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+          🎯 Create Your Investment Goal
         </h2>
 
-        {/* Goal Name */}
-        <div className="mb-4">
-          <label
-            htmlFor="goalName"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Goal Name
-          </label>
-          <input
-            type="text"
-            id="goalName"
-            name="goalName"
-            value={formData.goalName}
-            onChange={handleChange}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter your goal name"
-          />
-        </div>
+        {/* Input Group */}
+        <div className="space-y-5">
+          <div>
+            <label
+              htmlFor="goalName"
+              className="text-sm font-semibold text-gray-700"
+            >
+              Goal Name
+            </label>
+            <input
+              type="text"
+              id="goalName"
+              name="goalName"
+              value={formData.goalName}
+              onChange={handleChange}
+              className="mt-1 w-full px-4 py-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              placeholder="Eg: Buy a car, Save for wedding"
+              required
+            />
+          </div>
 
-        {/* Investment Type */}
-        <div className="mb-4">
-          <label
-            htmlFor="investmentType"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Investment Type
-          </label>
-          <select
-            id="investmentType"
-            name="investmentType"
-            value={formData.investmentType}
-            onChange={handleChange}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-          >
-            <option value="">Select an option</option>
-            <option value="Sip" >
-              SIP
-            </option>
-            <option value="Lumpsum">Lump Sum</option>
-          </select>
-        </div>
+          <div>
+            <label
+              htmlFor="investmentType"
+              className="text-sm font-semibold text-gray-700"
+            >
+              Investment Type
+            </label>
+            <select
+              id="investmentType"
+              name="investmentType"
+              value={formData.investmentType}
+              onChange={handleChange}
+              className="mt-1 w-full px-4 py-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              required
+            >
+              <option value="">Select an option</option>
+              <option value="Sip">SIP</option>
+              <option value="Lumpsum">Lump Sum</option>
+            </select>
+          </div>
 
-        <div className="mb-4">
-          <label
-            htmlFor="investmentAmount"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Investment Amount
-          </label>
-          <input
-            type="number"
-            id="investmentAmount"
-            name="investmentAmount"
-            value={formData.investmentAmount}
-            onChange={handleChange}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter amount"
-          />
-        </div>
+          <div>
+            <label
+              htmlFor="investmentAmount"
+              className="text-sm font-semibold text-gray-700"
+            >
+              Investment Amount (₹)
+            </label>
+            <input
+              type="number"
+              id="investmentAmount"
+              name="investmentAmount"
+              value={formData.investmentAmount}
+              onChange={handleChange}
+              className="mt-1 w-full px-4 py-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              placeholder="Eg: 50000"
+              required
+            />
+          </div>
 
-        {/* Target Amount */}
-        <div className="mb-4">
-          <label
-            htmlFor="targetAmount"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Target Amount
-          </label>
-          <input
-            type="number"
-            id="targetAmount"
-            name="targetAmount"
-            value={formData.targetAmount}
-            onChange={handleChange}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter target amount"
-          />
-        </div>
+          <div>
+            <label
+              htmlFor="targetAmount"
+              className="text-sm font-semibold text-gray-700"
+            >
+              Target Amount (₹)
+            </label>
+            <input
+              type="number"
+              id="targetAmount"
+              name="targetAmount"
+              value={formData.targetAmount}
+              onChange={handleChange}
+              className="mt-1 w-full px-4 py-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              placeholder="Eg: 1000000"
+              required
+            />
+          </div>
 
-        {/* Duration */}
-        <div className="mb-4">
-          <label
-            htmlFor="duration"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Duration in months
-          </label>
-          <input
-            type="number"
-            id="duration"
-            name="duration"
-            value={formData.duration}
-            onChange={handleChange}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter duration in months"
-          />
-        </div>
+          <div>
+            <label
+              htmlFor="duration"
+              className="text-sm font-semibold text-gray-700"
+            >
+              Duration (in months)
+            </label>
+            <input
+              type="number"
+              id="duration"
+              name="duration"
+              value={formData.duration}
+              onChange={handleChange}
+              className="mt-1 w-full px-4 py-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              placeholder="Eg: 24"
+              required
+            />
+          </div>
 
-        {/* Risk Tolerance */}
-        <div className="mb-4">
-          <label
-            htmlFor="riskTolerance"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Risk Tolerance
-          </label>
-          <select
-            id="riskTolerance"
-            name="riskTolerance"
-            value={formData.riskTolerance}
-            onChange={handleChange}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-          >
-            <option value="">Select risk tolerance</option>
-            <option value="Very Low">Very Low</option>
-            <option value="Low">Low</option>
-            <option value="Moderate">Moderate</option>
-            <option value="High">High</option>
-            <option value="Very High">Very High</option>
-          </select>
+          <div>
+            <label
+              htmlFor="riskTolerance"
+              className="text-sm font-semibold text-gray-700"
+            >
+              Risk Tolerance
+            </label>
+            <select
+              id="riskTolerance"
+              name="riskTolerance"
+              value={formData.riskTolerance}
+              onChange={handleChange}
+              className="mt-1 w-full px-4 py-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              required
+            >
+              <option value="">Select risk tolerance</option>
+              <option value="Very Low">Very Low</option>
+              <option value="Low">Low</option>
+              <option value="Moderate">Moderate</option>
+              <option value="High">High</option>
+              <option value="Very High">Very High</option>
+            </select>
+          </div>
         </div>
 
         {/* Submit Button */}
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-8">
           <button
             type="submit"
-            className="px-6 py-2 bg-green-600 text-white rounded-lg shadow-lg hover:bg-green-700 transition"
+            className="w-full py-3 bg-green-600 text-white text-lg font-semibold rounded-xl shadow-md hover:bg-green-700 transition-all duration-300"
           >
-            Submit
+            🚀 Submit Goal
           </button>
         </div>
       </form>
 
-      {/* Snackbar */}
+      {/* Snackbar for messages */}
       <Snackbar
         open={snackbar.open}
-        autoHideDuration={6000}
+        autoHideDuration={5000}
         onClose={handleSnackbarClose}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
@@ -236,8 +241,13 @@ const GoalForm = () => {
           sx={{
             width: "100%",
             backgroundColor:
-              snackbar.severity === "error" ? "#8B0000" : "#006400", // Dark red for error, dark green for success
+              snackbar.severity === "error"
+                ? "#8B0000"
+                : snackbar.severity === "info"
+                ? "#007BFF"
+                : "#006400",
             color: "white",
+            fontWeight: 500,
           }}
         >
           {snackbar.message}
