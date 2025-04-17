@@ -7,6 +7,7 @@ import Alert from "@mui/material/Alert";
 
 const GoalForm = () => {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     goalName: "",
     investmentType: "",
@@ -23,6 +24,8 @@ const GoalForm = () => {
     severity: "success",
   });
 
+  const [loading, setLoading] = useState(false); // New loading state
+
   const handleSnackbarClose = () => {
     setSnackbar({ ...snackbar, open: false });
   };
@@ -33,8 +36,7 @@ const GoalForm = () => {
     if (name === "investmentType" && value === "Sip") {
       setSnackbar({
         open: true,
-        message: "Will be avaiable soon",
-        severity: "info",
+        message: "Will be available soon",
         severity: "info",
       });
 
@@ -50,6 +52,7 @@ const GoalForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (formData.investmentType === "Sip") {
       setSnackbar({
         open: true,
@@ -58,6 +61,13 @@ const GoalForm = () => {
       });
       return;
     }
+
+    setLoading(true); // Start loading
+    setSnackbar({
+      open: true,
+      message: "Model is allocating your investments...",
+      severity: "info",
+    });
 
     try {
       await axios.post(url + "user/createGoal", {
@@ -80,11 +90,13 @@ const GoalForm = () => {
         message: "Failed to create goal. Please try again.",
         severity: "error",
       });
+    } finally {
+      setLoading(false); // End loading
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen  p-4">
+    <div className="flex items-center justify-center min-h-screen p-4">
       <form
         className="w-full max-w-xl bg-white p-8 rounded-2xl shadow-xl border border-gray-200"
         onSubmit={handleSubmit}
@@ -93,13 +105,9 @@ const GoalForm = () => {
           🎯 Create Your Investment Goal
         </h2>
 
-        {/* Input Group */}
         <div className="space-y-5">
           <div>
-            <label
-              htmlFor="goalName"
-              className="text-sm font-semibold text-gray-700"
-            >
+            <label htmlFor="goalName" className="text-sm font-semibold text-gray-700">
               Goal Name
             </label>
             <input
@@ -115,10 +123,7 @@ const GoalForm = () => {
           </div>
 
           <div>
-            <label
-              htmlFor="investmentType"
-              className="text-sm font-semibold text-gray-700"
-            >
+            <label htmlFor="investmentType" className="text-sm font-semibold text-gray-700">
               Investment Type
             </label>
             <select
@@ -136,10 +141,7 @@ const GoalForm = () => {
           </div>
 
           <div>
-            <label
-              htmlFor="investmentAmount"
-              className="text-sm font-semibold text-gray-700"
-            >
+            <label htmlFor="investmentAmount" className="text-sm font-semibold text-gray-700">
               Investment Amount (₹)
             </label>
             <input
@@ -155,10 +157,7 @@ const GoalForm = () => {
           </div>
 
           <div>
-            <label
-              htmlFor="targetAmount"
-              className="text-sm font-semibold text-gray-700"
-            >
+            <label htmlFor="targetAmount" className="text-sm font-semibold text-gray-700">
               Target Amount (₹)
             </label>
             <input
@@ -174,10 +173,7 @@ const GoalForm = () => {
           </div>
 
           <div>
-            <label
-              htmlFor="duration"
-              className="text-sm font-semibold text-gray-700"
-            >
+            <label htmlFor="duration" className="text-sm font-semibold text-gray-700">
               Duration (in months)
             </label>
             <input
@@ -193,10 +189,7 @@ const GoalForm = () => {
           </div>
 
           <div>
-            <label
-              htmlFor="riskTolerance"
-              className="text-sm font-semibold text-gray-700"
-            >
+            <label htmlFor="riskTolerance" className="text-sm font-semibold text-gray-700">
               Risk Tolerance
             </label>
             <select
@@ -221,14 +214,17 @@ const GoalForm = () => {
         <div className="flex justify-center mt-8">
           <button
             type="submit"
-            className="w-full py-3 bg-green-600 text-white text-lg font-semibold rounded-xl shadow-md hover:bg-green-700 transition-all duration-300"
+            disabled={loading}
+            className={`w-full py-3 text-white text-lg font-semibold rounded-xl shadow-md transition-all duration-300 ${
+              loading ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
+            }`}
           >
-            🚀 Submit Goal
+            {loading ? "⏳ Allocating..." : "🚀 Submit Goal"}
           </button>
         </div>
       </form>
 
-      {/* Snackbar for messages */}
+   
       <Snackbar
         open={snackbar.open}
         autoHideDuration={5000}
