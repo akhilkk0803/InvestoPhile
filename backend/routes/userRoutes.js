@@ -4,7 +4,9 @@ const bcrypt = require("bcryptjs");
 const router = express.Router();
 const User = require("../model/userModel");
 const Goal = require("../model/Goal");
+const Allocation = require("../model/Allocation");
 const axios = require("axios");
+const { checkAuth } = require("../utils/auth");
 const generateError = (err, code) => {
   const error = new Error(err);
   error.statusCode = code;
@@ -154,7 +156,7 @@ router.post("/getGoals", async (req, res, next) => {
     return res.status(401).json({ error: "Authorization token missing" });
   }
   try {
-    const goals = await Goal.find({ userId });
+    const goals = await Goal.find({ userId }).populate("allocation");
     if (!goals || goals.length == 0) {
       throw generateError("No Existing Goals", 409);
       //res.status(500).send("Err");
@@ -169,6 +171,43 @@ router.post("/getGoals", async (req, res, next) => {
 router.post(
   "/createGoal",
   async (req, res, next) => {
+    const { goalDetails } = req.body;
+    console.log(goalDetails);
+    try {
+      const investmentAmount = +goalDetails.investmentAmount;
+      const targetAmount = +goalDetails.targetAmount;
+      const duration = +goalDetails.duration;
+      const risk_capacity = +goalDetails.riskTolerance;
+
+      const goal = {
+        amount: investmentAmount,
+        expected_return:
+          ((targetAmount - investmentAmount) * 100) / investmentAmount,
+        risk_capacity: risk_capacity,
+        duration: duration,
+      };
+
+      const response = await axios.post("http://127.0.0.1:5000/optimize", goal);
+      const [stock, fixedDeposit, gold, govt_bond, mutualFund] =
+        response.data.optimal_weights;
+
+      const allocation = await Allocation.create({
+        stock: stock * 100,
+        fixedDeposit: fixedDeposit * 100,
+        gold: gold * 100,
+        govt_bond: govt_bond * 100,
+        mutualFund: mutualFund * 100,
+      });
+
+      console.log("Allocation saved:", allocation);
+      req.allocation = allocation._id;
+
+      next();
+    } catch (err) {
+      next(err);
+    }
+  },
+  async (req, res, next) => {
     const { userToken, goalDetails } = req.body;
     const {
       goalName,
@@ -179,26 +218,28 @@ router.post(
       frequency,
       duration,
     } = goalDetails;
-    // console.log(goalDetails);
-    const userId = getUserFromToken(userToken).id;
-    //console.log(userId);
-    //console.log(goal);
+    console.log(goalDetails);
     if (!userToken) {
       return res.status(401).json({ error: "Authorization token missing" });
     }
-    console.log(
-      userId,
-      goalName,
-      investmentType,
-      investmentAmount,
-      targetAmount,
-      riskTolerance,
-      frequency,
-      duration
-    );
+
+    const userId = getUserFromToken(userToken).id;
     const progress = [{ progressNumber: 0, investment: investmentAmount }];
+
     try {
-      const allocation = allocateAssets(riskTolerance, duration);
+      const allocation = req.allocation;
+      console.log(
+        userId,
+        goalName,
+        investmentType,
+        investmentAmount,
+        targetAmount,
+        riskTolerance,
+        frequency,
+        duration,
+        progress,
+        allocation
+      );
       const newGoal = await Goal.create({
         userId,
         goalName,
@@ -211,21 +252,36 @@ router.post(
         progress,
         allocation,
       });
-      res.json(200).json({ message: "Successfull" });
-      // next();
+      console.log("first");
+      res.status(200).json({ message: "Successful" });
     } catch (error) {
       next(error);
     }
   }
-  // async (req, res, next) => {
-  //   console.log("GOAL IS ", req.goal);
-  //   const response = await axios.post(
-  //     "http://127.0.0.1:8000/predict",
-  //     req.goal
-  //   );
-  //   res.json(response.data);
-  // }
 );
+
+router.delete("/deleteGoal", async (req, res, next) => {
+  try {
+    const { userToken, goalId } = req.body;
+    console.log(goalId);
+
+    const userId = getUserFromToken(userToken).id;
+    if (!userToken) {
+      return res.status(401).json({ error: "Authorization token missing" });
+    }
+    const goal = await Goal.findById(goalId);
+    if (!goal) {
+      throw generateError("No Goal with this ID", 404);
+    }
+    console.log(goalId);
+    await Allocation.findByIdAndDelete(goal.allocation);
+    await Goal.findByIdAndDelete(goalId);
+    res.status(200).json({ message: "Deletion sucessfull" });
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.put("/updateGoal/", async (req, res, next) => {
   try {
     const { userToken, goalDetails } = req.body;

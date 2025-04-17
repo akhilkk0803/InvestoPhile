@@ -22,7 +22,7 @@ const GoalSchema = new mongoose.Schema(
     },
     riskTolerance: {
       type: String,
-      enum: ["Very Low", "Low", "Moderate", "High", "Very High"],
+      enum: ["1", "2", "3", "4", "5"],
       required: true,
     },
     frequency: {
@@ -45,7 +45,10 @@ const GoalSchema = new mongoose.Schema(
         },
       },
     ],
-    allocation: [],
+    allocation: {
+      type: mongoose.Types.ObjectId,
+      ref: "Allocation",
+    },
   },
   { timestamps: true }
 );

@@ -208,11 +208,11 @@ const GoalForm = () => {
               required
             >
               <option value="">Select risk tolerance</option>
-              <option value="Very Low">Very Low</option>
-              <option value="Low">Low</option>
-              <option value="Moderate">Moderate</option>
-              <option value="High">High</option>
-              <option value="Very High">Very High</option>
+              <option value="1">Very Low</option>
+              <option value="2">Low</option>
+              <option value="3">Moderate</option>
+              <option value="4">High</option>
+              <option value="5">Very High</option>
             </select>
           </div>
         </div>

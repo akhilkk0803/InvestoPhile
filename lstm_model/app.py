@@ -23,9 +23,11 @@ HISTORICAL_DATA_PATH = os.path.join(os.path.dirname(__file__), 'historical_month
 @app.route('/optimize', methods=['POST'])
 def optimize_portfolio():
     try:
+        print("INT MODEL")
+
         logger.info("Starting portfolio optimization")
         data = request.get_json()
-        
+        print(data)
         # Extract user inputs
         investment_amount = float(data['amount'])
         expected_return = float(data['expected_return'])

@@ -4,13 +4,9 @@ import { PieChart } from "@mui/x-charts/PieChart";
 import { useDrawingArea } from "@mui/x-charts/hooks";
 import { styled } from "@mui/material/styles";
 import { NavLink } from "react-router-dom";
-const data = [
-  { value: 5, label: "STOCK" },
-  { value: 10, label: "MUTUALFUNDS" },
-  { value: 15, label: "GOLD" },
-  { value: 20, label: "BONDS" },
-  { value: 50, label: "FIXED DEPOSIT" },
-];
+
+// Assuming the goal data has this structure
+// goal.allocation = { stock: 30, fixedDeposit: 25, gold: 20, govt_bond: 15, mutualFund: 10 }
 
 const size = {
   width: 600,
@@ -34,11 +30,22 @@ function PieCenterLabel({ children }) {
 }
 
 export default function PieChartWithCenterLabel({ goal }) {
-  const [allocation, setallocation] = useState([]);
+  const [allocation, setAllocation] = useState([]);
+
   useEffect(() => {
-    setallocation(goal.allocation);
+    const { stock, fixedDeposit, gold, govt_bond, mutualFund } =
+      goal.allocation;
+    const allocationData = [
+      { value: stock, label: "Stock" },
+      { value: fixedDeposit, label: "Fixed Deposit" },
+      { value: gold, label: "Gold" },
+      { value: govt_bond, label: "Govt Bond" },
+      { value: mutualFund, label: "Mutual Fund" },
+    ];
+
+    setAllocation(allocationData);
   }, [goal]);
-  console.log(allocation);
+
   return (
     <NavLink to={"/goal/" + goal._id} state={{ goal }}>
       <PieChart series={[{ data: allocation, innerRadius: 80 }]} {...size}>
