@@ -59,8 +59,11 @@ class TimeSeriesModel:
         # Calculate monthly returns
         returns = df.pct_change().dropna()
         
-        # Scale the data
-        scaled_data = self.scaler.fit_transform(returns)
+        # Only fit the scaler during training, otherwise just transform
+        if not hasattr(self.scaler, 'n_features_in_'):
+            scaled_data = self.scaler.fit_transform(returns)
+        else:
+            scaled_data = self.scaler.transform(returns)
         
         X, y = [], []
         for i in range(len(scaled_data) - self.sequence_length):
@@ -95,8 +98,8 @@ class TimeSeriesModel:
         # Prepare data
         X, y = self.prepare_data(df)
         
-        # Build and train model if not already loaded
-        if self.model is None:
+        # Build and train model if not already loaded or if data shape changed
+        if self.model is None or X.shape[2] != self.model.input_shape[2]:
             logger.info("Training new LSTM model")
             self.model = self.build_model((X.shape[1], X.shape[2]))
             self.model.fit(
@@ -112,17 +115,18 @@ class TimeSeriesModel:
         
         # Make predictions
         logger.info("Making predictions")
-        last_sequence = X[-1:]
+        last_sequence = X[-1:]  # Use the most recent sequence
         predictions = []
         
         # Make predictions for the specified duration
+        current_sequence = last_sequence.copy()
         for i in range(duration):
-            pred = self.model.predict(last_sequence, verbose=0)
+            pred = self.model.predict(current_sequence, verbose=0)
             predictions.append(pred[0])
             
             # Update sequence for next prediction
-            last_sequence = np.roll(last_sequence, -1, axis=1)
-            last_sequence[0, -1] = pred[0]
+            current_sequence = np.roll(current_sequence, -1, axis=1)
+            current_sequence[0, -1] = pred[0]
             
             if i % 3 == 0:  # Log progress every 3 months
                 logger.info(f"Made {i+1}/{duration} monthly predictions")
@@ -145,3 +149,10 @@ class TimeSeriesModel:
         
         logger.info("Time series optimization completed")
         return final_weights 
+
+    def should_retrain(self, validation_loss_threshold=0.1):
+        # Add validation logic here
+        return True if validation_loss > validation_loss_threshold else False 
+
+    def calculate_prediction_confidence(self, predictions):
+        return np.std(predictions, axis=0)  # Lower std = higher confidence 

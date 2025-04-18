@@ -182,7 +182,7 @@ router.post(
       const goal = {
         amount: investmentAmount,
         expected_return:
-          ((targetAmount - investmentAmount) * 100) / investmentAmount,
+          ((targetAmount - investmentAmount)) / investmentAmount,
         risk_capacity: risk_capacity,
         duration: duration,
       };
