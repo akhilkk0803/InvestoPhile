@@ -75,6 +75,14 @@ const GoalForm = () => {
         goalDetails: formData,
       });
 
+      // Fetch the newly created goal
+      const goalsResponse = await axios.post(url + "user/getGoals", {
+        userToken: localStorage.getItem("token"),
+      });
+
+      // Get the most recently created goal
+      const newGoal = goalsResponse.data[goalsResponse.data.length - 1];
+
       setSnackbar({
         open: true,
         message: "Goal created successfully!",
@@ -82,7 +90,7 @@ const GoalForm = () => {
       });
 
       setTimeout(() => {
-        navigate("/dashboard");
+        navigate(`/goal/${newGoal._id}`, { state: { goal: newGoal } });
       }, 2000);
     } catch (error) {
       setSnackbar({
@@ -215,16 +223,15 @@ const GoalForm = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-3 text-white text-lg font-semibold rounded-xl shadow-md transition-all duration-300 ${
-              loading ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
-            }`}
+            className={`w-full py-3 text-white text-lg font-semibold rounded-xl shadow-md transition-all duration-300 ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
+              }`}
           >
             {loading ? "⏳ Allocating..." : "🚀 Submit Goal"}
           </button>
         </div>
       </form>
 
-   
+
       <Snackbar
         open={snackbar.open}
         autoHideDuration={5000}
@@ -240,8 +247,8 @@ const GoalForm = () => {
               snackbar.severity === "error"
                 ? "#8B0000"
                 : snackbar.severity === "info"
-                ? "#007BFF"
-                : "#006400",
+                  ? "#007BFF"
+                  : "#006400",
             color: "white",
             fontWeight: 500,
           }}

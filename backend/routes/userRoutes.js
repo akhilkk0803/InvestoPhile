@@ -141,7 +141,7 @@ router.post("/login", async (req, res, next) => {
       throw generateError("Wrong password", 404);
     }
     const token = createToken(user._id);
-    res.status(200).json({ token });
+    res.status(200).json({ token, name: user.name });
   } catch (error) {
     next(error);
   }
@@ -190,13 +190,19 @@ router.post(
       const response = await axios.post("http://127.0.0.1:5000/optimize", goal);
       const [stock, fixedDeposit, gold, govt_bond, mutualFund] =
         response.data.optimal_weights;
-
+      const projected_return = response.data.portfolio_metrics.total_return;
+      const sharpe_ratio = response.data.portfolio_metrics.sharpe_ratio;
+      const projected_cagr = response.data.portfolio_metrics.annualized_return;
+      console.log(projected_return, sharpe_ratio, projected_cagr);
       const allocation = await Allocation.create({
         stock: stock * 100,
         fixedDeposit: fixedDeposit * 100,
         gold: gold * 100,
         govt_bond: govt_bond * 100,
         mutualFund: mutualFund * 100,
+        projected_return: projected_return * 100,
+        sharpe_ratio: sharpe_ratio,
+        projected_cagr: projected_cagr * 100,
       });
 
       console.log("Allocation saved:", allocation);
@@ -253,7 +259,7 @@ router.post(
         allocation,
       });
       console.log("first");
-      res.status(200).json({ message: "Successful" });
+      res.status(200).json({ message: "Successful", goalId: newGoal._id });
     } catch (error) {
       next(error);
     }

@@ -49,6 +49,7 @@ const Login = () => {
         horizontal: "right",
       });
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("username", res.data.name);
       setTimeout(() => {
         navigate("/dashboard");
       }, 2000);

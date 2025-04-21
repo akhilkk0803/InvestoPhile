@@ -4,6 +4,75 @@ import { PieChart } from "@mui/x-charts/PieChart";
 import axios from "axios";
 import { url } from "../url";
 import { LineChart, lineElementClasses } from "@mui/x-charts/LineChart";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Button from "@mui/material/Button";
+import { styled } from "@mui/material/styles";
+import DeleteIcon from "@mui/icons-material/Delete";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import CloseIcon from "@mui/icons-material/Close";
+import IconButton from "@mui/material/IconButton";
+
+const StyledDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialog-paper": {
+    borderRadius: "16px",
+    padding: theme.spacing(2),
+    maxWidth: "400px",
+    width: "100%",
+  },
+}));
+
+const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  gap: theme.spacing(1),
+  color: theme.palette.error.main,
+  "& .MuiTypography-root": {
+    fontSize: "1.5rem",
+    fontWeight: 600,
+  },
+}));
+
+const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
+  padding: theme.spacing(3),
+  "& .MuiDialogContentText-root": {
+    fontSize: "1.1rem",
+    color: theme.palette.text.secondary,
+  },
+}));
+
+const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
+  padding: theme.spacing(2),
+  gap: theme.spacing(1),
+}));
+
+const DeleteButton = styled(Button)(({ theme }) => ({
+  backgroundColor: theme.palette.error.main,
+  color: "white",
+  "&:hover": {
+    backgroundColor: theme.palette.error.dark,
+  },
+  padding: "8px 24px",
+  borderRadius: "8px",
+  textTransform: "none",
+  fontWeight: 600,
+}));
+
+const CancelButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.text.secondary,
+  "&:hover": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  padding: "8px 24px",
+  borderRadius: "8px",
+  textTransform: "none",
+  fontWeight: 600,
+}));
 
 const SingleGoal = () => {
   const location = useLocation();
@@ -14,6 +83,12 @@ const SingleGoal = () => {
   const [showProgressForm, setShowProgressForm] = useState(false);
   const [newProgress, setNewProgress] = useState({
     investment: "",
+  });
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
   });
 
   const mapRisk = {
@@ -69,12 +144,22 @@ const SingleGoal = () => {
     }
   };
 
-  const handleDeleteGoal = async () => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this goal?"
-    );
-    if (!confirmed) return;
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbar({ ...snackbar, open: false });
+  };
 
+  const handleDeleteDialogOpen = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteDialogClose = () => {
+    setDeleteDialogOpen(false);
+  };
+
+  const handleDeleteGoal = async () => {
     try {
       await axios.delete(url + "user/deleteGoal", {
         data: {
@@ -82,11 +167,22 @@ const SingleGoal = () => {
           goalId: goal._id,
         },
       });
-      alert("Goal deleted successfully!");
-      navigate("/dashboard");
+      setSnackbar({
+        open: true,
+        message: "Goal deleted successfully!",
+        severity: "success",
+      });
+      handleDeleteDialogClose();
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 2000);
     } catch (error) {
       console.error("Failed to delete goal:", error);
-      alert("Something went wrong while deleting the goal.");
+      setSnackbar({
+        open: true,
+        message: "Something went wrong while deleting the goal.",
+        severity: "error",
+      });
     }
   };
 
@@ -139,6 +235,25 @@ const SingleGoal = () => {
             </div>
           </div>
 
+          {/* Financial Metrics Section */}
+          <div className="mt-8 bg-gray-50 rounded-lg p-6">
+            <h3 className="text-xl font-semibold mb-4">💼 Portfolio Metrics</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <p className="text-gray-600 mb-1">Projected Return</p>
+                <p className="text-2xl font-bold text-green-600">{goal.allocation?.projected_return?.toFixed(2)}%</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <p className="text-gray-600 mb-1">CAGR</p>
+                <p className="text-2xl font-bold text-blue-600">{goal.allocation?.projected_cagr?.toFixed(2)}%</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <p className="text-gray-600 mb-1">Sharpe Ratio</p>
+                <p className="text-2xl font-bold text-purple-600">{goal.allocation?.sharpe_ratio?.toFixed(2)}</p>
+              </div>
+            </div>
+          </div>
+
           {/* Progress Bar */}
           <div className="mt-6">
             <div className="w-full bg-gray-300 rounded-full h-5 overflow-hidden">
@@ -148,7 +263,7 @@ const SingleGoal = () => {
                   width: `${Math.max(
                     ((currentAmount - goal.investmentAmount) /
                       (goal.targetAmount - goal.investmentAmount)) *
-                      100,
+                    100,
                     0
                   )}%`,
                 }}
@@ -169,12 +284,20 @@ const SingleGoal = () => {
 
           {/* Delete Button */}
           <div className="flex justify-end mt-6">
-            <button
-              onClick={handleDeleteGoal}
-              className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded-md transition"
+            <Button
+              onClick={handleDeleteDialogOpen}
+              variant="contained"
+              color="error"
+              startIcon={<DeleteIcon />}
+              sx={{
+                borderRadius: "8px",
+                textTransform: "none",
+                fontWeight: 600,
+                padding: "8px 24px",
+              }}
             >
-              🗑️ Delete Goal
-            </button>
+              Delete Goal
+            </Button>
           </div>
         </div>
 
@@ -263,6 +386,87 @@ const SingleGoal = () => {
             </div>
           )}
         </div>
+
+        {/* Delete Confirmation Dialog */}
+        <StyledDialog
+          open={deleteDialogOpen}
+          onClose={handleDeleteDialogClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+          TransitionProps={{
+            onEntering: (node) => {
+              node.style.transform = "scale(1)";
+            },
+          }}
+        >
+          <IconButton
+            aria-label="close"
+            onClick={handleDeleteDialogClose}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <StyledDialogTitle id="alert-dialog-title">
+            <WarningAmberIcon color="error" />
+            Delete Goal
+          </StyledDialogTitle>
+          <StyledDialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Are you sure you want to delete "{goal.goalName}"? This action cannot be undone and all associated data will be permanently removed.
+            </DialogContentText>
+          </StyledDialogContent>
+          <StyledDialogActions>
+            <CancelButton onClick={handleDeleteDialogClose}>
+              Cancel
+            </CancelButton>
+            <DeleteButton
+              onClick={handleDeleteGoal}
+              variant="contained"
+              startIcon={<DeleteIcon />}
+              autoFocus
+            >
+              Delete
+            </DeleteButton>
+          </StyledDialogActions>
+        </StyledDialog>
+
+        {/* Snackbar for notifications */}
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={5000}
+          onClose={handleSnackbarClose}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          TransitionProps={{
+            onEntering: (node) => {
+              node.style.transform = "translateY(0)";
+            },
+          }}
+        >
+          <Alert
+            onClose={handleSnackbarClose}
+            severity={snackbar.severity}
+            variant="filled"
+            sx={{
+              width: "100%",
+              borderRadius: "8px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              "& .MuiAlert-icon": {
+                fontSize: "1.5rem",
+              },
+              "& .MuiAlert-message": {
+                fontSize: "1rem",
+                fontWeight: 500,
+              },
+            }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
       </div>
     </div>
   );

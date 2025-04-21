@@ -22,6 +22,18 @@ const AllocationSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    projected_return: {
+      type: Number,
+      required: true,
+    },
+    sharpe_ratio: {
+      type: Number,
+      required: true,
+    },
+    projected_cagr: {
+      type: Number,
+      required: true,
+    },
   },
   { timestamps: true }
 );

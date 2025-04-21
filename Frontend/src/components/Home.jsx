@@ -14,13 +14,13 @@ function Home() {
 
           {/* Navigation Links */}
           <div className="space-x-6 hidden md:flex">
-          {["Home", "Features", "About", "Contact"].map((text) => (              <a
-                key={text}
-                href={`#${text.toLowerCase()}`}
-                className="text-teal-100 text-lg font-medium hover:text-teal-300 transition duration-200"
-              >
-                {text}
-              </a>
+            {["Home", "Features", "About Us",].map((text) => (<a
+              key={text}
+              href={`#${text.toLowerCase()}`}
+              className="text-teal-100 text-lg font-medium hover:text-teal-300 transition duration-200"
+            >
+              {text}
+            </a>
             ))}
           </div>
 
@@ -120,7 +120,7 @@ function Home() {
       </section>
       {/* Contact Us Section */}
       <section
-        id="contact"
+        id="about us"
         className="py-20 bg-gradient-to-br from-teal-800 to-black text-center"
       >
         <div className="container mx-auto px-6">
@@ -138,18 +138,18 @@ function Home() {
                 name: "Abhishekh",
                 role: "Frontend Developer",
                 img: "https://api.dicebear.com/7.x/initials/svg?seed=Akhil+Kumar",
-                email: "akhil@example.com",
+                email: "abhiybdrive@gmail.com",
               },
               {
                 name: "Madhurank Hegde",
                 role: "Ai Developer",
-                img: "https://api.dicebear.com/7.x/initials/svg?seed=Rahul+Verma",
-                email: "rahul@example.com",
+                img: "https://api.dicebear.com/7.x/initials/svg?seed=Madhurank+Hegde",
+                email: "madhurank.hegde@gmail.com",
               },
               {
                 name: "Akhil K Kulkarni",
                 role: "Backend Developer",
-                img: "https://api.dicebear.com/7.x/initials/svg?seed=Sneha+Patel",
+                img: "https://api.dicebear.com/7.x/initials/svg?seed=Akhil+Kulkarni",
                 email: "akhilkk0803@gmail.com",
               },
             ].map((member) => (
