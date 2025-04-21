@@ -311,11 +311,26 @@ const SingleGoal = () => {
                 height={450}
               />
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-lg text-gray-700 font-medium">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
               {allocation.map((asset) => (
-                <div key={asset.label}>
-                  <span className="capitalize">{asset.label}:</span>{" "}
-                  {parseFloat(asset.value).toFixed(2)}%
+                <div
+                  key={asset.label}
+                  className="bg-white rounded-xl shadow-md p-4 transform transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                >
+                  <div className="flex flex-col items-center space-y-2">
+                    <div className="text-2xl font-bold text-gray-800">
+                      {parseFloat(asset.value).toFixed(1)}%
+                    </div>
+                    <div className="text-sm font-medium text-gray-600 capitalize">
+                      {asset.label}
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${asset.value}%` }}
+                      ></div>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
