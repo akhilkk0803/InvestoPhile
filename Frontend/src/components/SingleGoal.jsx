@@ -17,6 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
+import { formatIndianNumber, parseIndianNumber } from "../utility/formatters";
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialog-paper": {
@@ -121,8 +122,9 @@ const SingleGoal = () => {
 
   const handleUpdateProgress = async () => {
     if (newProgress.investment) {
+      const parsedAmount = parseIndianNumber(newProgress.investment);
       const updatedProgress = {
-        investment: newProgress.investment,
+        investment: parsedAmount,
         progressNumber: +goal.progress.at(-1).progressNumber + 1,
       };
       setGoal((prevGoal) => ({
@@ -142,6 +144,27 @@ const SingleGoal = () => {
     } else {
       alert("Please enter a valid amount.");
     }
+  };
+
+  const handleProgressInputChange = (e) => {
+    const value = e.target.value;
+    // Remove all non-digit characters first
+    const digitsOnly = value.replace(/\D/g, '');
+
+    // Format the number according to Indian standards
+    let formattedValue = '';
+    if (digitsOnly.length > 3) {
+      // Get the last 3 digits
+      const lastThree = digitsOnly.slice(-3);
+      // Get the remaining digits
+      const otherDigits = digitsOnly.slice(0, -3);
+      // Add commas after every 2 digits from right
+      formattedValue = otherDigits.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + "," + lastThree;
+    } else {
+      formattedValue = digitsOnly;
+    }
+
+    setNewProgress({ ...newProgress, investment: formattedValue });
   };
 
   const handleSnackbarClose = (event, reason) => {
@@ -209,13 +232,13 @@ const SingleGoal = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4 text-gray-800 text-lg">
               <p>
-                <strong>🎯 Target Amount:</strong> ₹{goal.targetAmount}
+                <strong>🎯 Target Amount:</strong> ₹{formatIndianNumber(goal.targetAmount)}
               </p>
               <p>
-                <strong>💰 Initial Investment:</strong> ₹{goal.investmentAmount}
+                <strong>💰 Initial Investment:</strong> ₹{formatIndianNumber(goal.investmentAmount)}
               </p>
               <p>
-                <strong>📈 Current Amount:</strong> ₹{currentAmount}
+                <strong>📈 Current Amount:</strong> ₹{formatIndianNumber(currentAmount)}
               </p>
               <p>
                 <strong>⏳ Duration:</strong> {goal.duration} months
@@ -384,13 +407,11 @@ const SingleGoal = () => {
                 Enter Updated Amount
               </label>
               <input
-                type="number"
+                type="text"
                 value={newProgress.investment}
-                onChange={(e) =>
-                  setNewProgress({ ...newProgress, investment: e.target.value })
-                }
+                onChange={handleProgressInputChange}
                 className="w-full px-4 py-2 border rounded-md"
-                placeholder="₹ Current amount"
+                placeholder="₹ Current amount (e.g., 1,00,000)"
               />
               <button
                 onClick={handleUpdateProgress}

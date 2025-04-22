@@ -4,6 +4,7 @@ import { url } from "../url";
 import { useNavigate } from "react-router-dom";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { formatIndianNumber, parseIndianNumber } from "../utility/formatters";
 
 const GoalForm = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const GoalForm = () => {
     severity: "success",
   });
 
-  const [loading, setLoading] = useState(false); // New loading state
+  const [loading, setLoading] = useState(false);
 
   const handleSnackbarClose = () => {
     setSnackbar({ ...snackbar, open: false });
@@ -47,7 +48,13 @@ const GoalForm = () => {
       return;
     }
 
-    setFormData({ ...formData, [name]: value });
+    // Handle amount fields with Indian number formatting
+    if (name === "investmentAmount" || name === "targetAmount") {
+      const parsedValue = parseIndianNumber(value);
+      setFormData({ ...formData, [name]: parsedValue });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -62,7 +69,7 @@ const GoalForm = () => {
       return;
     }
 
-    setLoading(true); // Start loading
+    setLoading(true);
     setSnackbar({
       open: true,
       message: "Model is allocating your investments...",
@@ -75,12 +82,10 @@ const GoalForm = () => {
         goalDetails: formData,
       });
 
-      // Fetch the newly created goal
       const goalsResponse = await axios.post(url + "user/getGoals", {
         userToken: localStorage.getItem("token"),
       });
 
-      // Get the most recently created goal
       const newGoal = goalsResponse.data[goalsResponse.data.length - 1];
 
       setSnackbar({
@@ -99,7 +104,7 @@ const GoalForm = () => {
         severity: "error",
       });
     } finally {
-      setLoading(false); // End loading
+      setLoading(false);
     }
   };
 
@@ -153,13 +158,13 @@ const GoalForm = () => {
               Investment Amount (₹)
             </label>
             <input
-              type="number"
+              type="text"
               id="investmentAmount"
               name="investmentAmount"
-              value={formData.investmentAmount}
+              value={formatIndianNumber(formData.investmentAmount)}
               onChange={handleChange}
               className="mt-1 w-full px-4 py-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
-              placeholder="Eg: 50000"
+              placeholder="Eg: 1,00,000"
               required
             />
           </div>
@@ -169,13 +174,13 @@ const GoalForm = () => {
               Target Amount (₹)
             </label>
             <input
-              type="number"
+              type="text"
               id="targetAmount"
               name="targetAmount"
-              value={formData.targetAmount}
+              value={formatIndianNumber(formData.targetAmount)}
               onChange={handleChange}
               className="mt-1 w-full px-4 py-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
-              placeholder="Eg: 1000000"
+              placeholder="Eg: 5,00,000"
               required
             />
           </div>
@@ -218,7 +223,6 @@ const GoalForm = () => {
           </div>
         </div>
 
-        {/* Submit Button */}
         <div className="flex justify-center mt-8">
           <button
             type="submit"
@@ -230,7 +234,6 @@ const GoalForm = () => {
           </button>
         </div>
       </form>
-
 
       <Snackbar
         open={snackbar.open}
