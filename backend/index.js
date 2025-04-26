@@ -8,6 +8,17 @@ const userRoutes = require("./routes/userRoutes");
 const cors = require("cors");
 app.use(express.json());
 app.use(cors());
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    service: 'investophile-api',
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+  });
+});
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
