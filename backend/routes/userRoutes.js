@@ -7,6 +7,16 @@ const Goal = require("../model/Goal");
 const Allocation = require("../model/Allocation");
 const axios = require("axios");
 const { checkAuth } = require("../utils/auth");
+
+// Health check endpoint
+router.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    service: 'user-service'
+  });
+});
+
 const generateError = (err, code) => {
   const error = new Error(err);
   error.statusCode = code;
